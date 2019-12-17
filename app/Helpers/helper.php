@@ -1,60 +1,84 @@
 <?php
+$a = 4;
+$c = 2;
 
+class CCCCCC
+{
+    function __call($name, $arguments)
+    {
+        echo "__call" . PHP_EOL;
 
-if (! function_exists('reverseScandir')) {
+    }
+}
 
-    function reverseScandir($basePath,$prefix = '',$opts = []){
+$cc = new CCCCCC();
+
+echo $b ?? -4 + $a ?? $c;
+echo PHP_EOL;
+
+echo $a ?? 0 + $b ?? 0 + $c ?? 0; // 4
+echo PHP_EOL;
+echo ($a ?? 0) + ($b ?? 0) + ($c ?? 0); // 6
+echo PHP_EOL;
+echo $a ?? (0 + $b) ?? (0 + $c) ?? 0; // 4
+echo PHP_EOL;
+
+if (!function_exists('reverseScandir')) {
+
+    function reverseScandir($basePath, $prefix = '', $opts = [])
+    {
         $DS = DIRECTORY_SEPARATOR;
-        $basePath = trim($basePath,'/\\');
+        $basePath = trim($basePath, '/\\');
         $scan = scandir($basePath);
         $ret = [];
         $only = false;
-        if(!empty($opts)){
+        if (!empty($opts)) {
             $only = isset($opts['only']) ? $opts['only'] : false;
             $only = array_flip($only);
         }
-        for ($i = 2 ; $i < count($scan) ; $i ++){
-            $filename = $basePath.$DS.$scan[$i];
-            if(is_dir($filename)){
-                if(false === $only){
-                    $ret = array_merge($ret,reverseScandir($filename,$prefix.$scan[$i].$DS,$opts));
-                }else{
-                    $pf = $prefix.$scan[$i].$DS;
-                    $key1 = str_replace(['\\','/'], '/', trim($pf,'\\/'));
-                    $key2 = str_replace(['\\','/'], '\\', trim($pf,'\\/'));
-                    if(isset($only[$key1]) || isset($only[$key2])){
-                        $ret = array_merge($ret,reverseScandir($filename,$prefix.$scan[$i].$DS,$opts));
+        for ($i = 2; $i < count($scan); $i++) {
+            $filename = $basePath . $DS . $scan[$i];
+            if (is_dir($filename)) {
+                if (false === $only) {
+                    $ret = array_merge($ret, reverseScandir($filename, $prefix . $scan[$i] . $DS, $opts));
+                } else {
+                    $pf = $prefix . $scan[$i] . $DS;
+                    $key1 = str_replace(['\\', '/'], '/', trim($pf, '\\/'));
+                    $key2 = str_replace(['\\', '/'], '\\', trim($pf, '\\/'));
+                    if (isset($only[$key1]) || isset($only[$key2])) {
+                        $ret = array_merge($ret, reverseScandir($filename, $prefix . $scan[$i] . $DS, $opts));
                     }
                 }
-            }else{
-                $ret[] = $prefix.$scan[$i];
+            } else {
+                $ret[] = $prefix . $scan[$i];
             }
         }
         return $ret;
     }
 }
 
-if (! function_exists('base32_encode')) {
-    function base32_encode($str){
+if (!function_exists('base32_encode')) {
+    function base32_encode($str)
+    {
         $base32Map = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
         $len = strlen($str);
         $b32 = '';
         $rest = 0;
         $restLen = 0;
-        for($i = 0 ; $i < $len ; $i ++ ){
+        for ($i = 0; $i < $len; $i++) {
             $chrCode = ord($str[$i]);
             $thisByte = ($rest << 8) | $chrCode;
             $thisByteLen = $restLen + 8;
-            while($thisByteLen >= 5){
+            while ($thisByteLen >= 5) {
                 $b32 .= $base32Map[$thisByte >> ($thisByteLen - 5)];
                 $thisByteLen -= 5;
-                $thisByte = $thisByte & (pow(2,$thisByteLen) - 1);
+                $thisByte = $thisByte & (pow(2, $thisByteLen) - 1);
             }
             $rest = $thisByte;
             $restLen = $thisByteLen;
         }
-        if($restLen > 0){
-            $rest = $rest << ( 5 - $restLen);
+        if ($restLen > 0) {
+            $rest = $rest << (5 - $restLen);
             $b32 .= $base32Map[$rest];
         }
         return $b32;
@@ -62,15 +86,15 @@ if (! function_exists('base32_encode')) {
 }
 
 
-if (! function_exists('totp_secret_compare')) {
+if (!function_exists('totp_secret_compare')) {
 
-    function totp_secret_compare($secret,$digitSecret)
+    function totp_secret_compare($secret, $digitSecret)
     {
         return \App\Services\Common\TOTPService::verify_key(base32_encode($secret), $digitSecret);
     }
 }
 
-if (! function_exists('totp_secret_encode')) {
+if (!function_exists('totp_secret_encode')) {
 
     function totp_secret_encode($secret)
     {
@@ -78,7 +102,7 @@ if (! function_exists('totp_secret_encode')) {
     }
 }
 
-if (! function_exists('is_json')) {
+if (!function_exists('is_json')) {
 
     function is_json($string)
     {
@@ -91,7 +115,7 @@ if (! function_exists('is_json')) {
 }
 
 
-if (! function_exists('now')) {
+if (!function_exists('now')) {
 
     function now($format = 'Y-m-d H:i:s')
     {
@@ -100,15 +124,15 @@ if (! function_exists('now')) {
 }
 
 
-if (! function_exists('error_400')) {
+if (!function_exists('error_400')) {
 
     function error_400($message = '')
     {
-        return view('errors.400',['error' => $message]);
+        return view('errors.400', ['error' => $message]);
     }
 }
 
-if (! function_exists('error_404')) {
+if (!function_exists('error_404')) {
 
     function error_404($message = '')
     {
@@ -116,7 +140,7 @@ if (! function_exists('error_404')) {
     }
 }
 
-if (! function_exists('getRequestUrl')) {
+if (!function_exists('getRequestUrl')) {
 
     /**
      * 获取请求的URL，带HTTP（S）,带参数
@@ -139,7 +163,7 @@ if (! function_exists('getRequestUrl')) {
     }
 }
 
-if (! function_exists('aes')) {
+if (!function_exists('aes')) {
 
     /**
      * 获取AES实例
@@ -149,7 +173,7 @@ if (! function_exists('aes')) {
     function aes()
     {
         static $AES = null;
-        if (! $AES) {
+        if (!$AES) {
             $AES = new \App\Extensions\Common\AESTool();
             $AES->setSecretKey(\Config::get('app.key', 'I am the AES key!'));
         }
@@ -159,7 +183,7 @@ if (! function_exists('aes')) {
     /**
      * AES加密
      *
-     * @param unknown $str            
+     * @param unknown $str
      * @return \App\Extensions\Common\str
      */
     function aes_encrypt($str)
@@ -170,7 +194,7 @@ if (! function_exists('aes')) {
     /**
      * AES解密
      *
-     * @param unknown $str            
+     * @param unknown $str
      * @return Ambigous <string, boolean>
      */
     function aes_decrypt($str)
@@ -179,13 +203,13 @@ if (! function_exists('aes')) {
     }
 }
 
-if (! function_exists('groupConcatToArray')) {
+if (!function_exists('groupConcatToArray')) {
 
     /**
      * 解析group_cancat 的字符串为数组
      *
-     * @param unknown $value            
-     * @param unknown $separator            
+     * @param unknown $value
+     * @param unknown $separator
      * @return multitype:
      */
     function groupConcatToArray($value, $separator)
@@ -196,12 +220,12 @@ if (! function_exists('groupConcatToArray')) {
     }
 }
 
-if (! function_exists('detect_encoding')) {
+if (!function_exists('detect_encoding')) {
 
     /**
      * Detect string encoding
      *
-     * @param unknown $content            
+     * @param unknown $content
      * @return string
      */
     function detect_encoding($content)
@@ -217,7 +241,7 @@ if (! function_exists('detect_encoding')) {
     }
 }
 
-if (! function_exists('setRequiredIfMissedEmpty')) {
+if (!function_exists('setRequiredIfMissedEmpty')) {
 
     function setRequiredIfMissedEmpty($data, $rule)
     {
@@ -231,8 +255,8 @@ if (! function_exists('setRequiredIfMissedEmpty')) {
                 if (strpos($rr, 'required_if') === 0) {
                     $ruleProperties = preg_split('/[,:]/', $rr);
                     if (
-                    // !isset($data[$ruleProperties[1]]) ||
-                    $data[$ruleProperties[1]] != $ruleProperties[2]) {
+                        // !isset($data[$ruleProperties[1]]) ||
+                        $data[$ruleProperties[1]] != $ruleProperties[2]) {
                         $data[$k] = null;
                     }
                 }
@@ -242,14 +266,14 @@ if (! function_exists('setRequiredIfMissedEmpty')) {
     }
 }
 
-if (! function_exists('getChangedProperties')) {
+if (!function_exists('getChangedProperties')) {
 
     /**
      * 获取已变更数据
      *
-     * @param unknown $newData            
-     * @param unknown $oldData            
-     * @param unknown $properties            
+     * @param unknown $newData
+     * @param unknown $oldData
+     * @param unknown $properties
      * @return <pre> [
      *         'diffKey' => [oldvalue,newvalue]
      *         ]
@@ -270,7 +294,7 @@ if (! function_exists('getChangedProperties')) {
         return $diffValues;
     }
 }
-if (! function_exists('nameContainNumberAndSpecialChar')) {
+if (!function_exists('nameContainNumberAndSpecialChar')) {
 
     function chineseNameCheck($subject)
     {
@@ -307,7 +331,7 @@ EOF;
     }
 }
 
-if (! function_exists('getRangeWidthWords')) {
+if (!function_exists('getRangeWidthWords')) {
 
     function getStrWidth($component)
     {
@@ -330,9 +354,9 @@ if (! function_exists('getRangeWidthWords')) {
     /**
      * 获取 $min ~ $max 个英文宽度的字 （中文占3，英占1）
      *
-     * @param unknown $str            
-     * @param unknown $min            
-     * @param unknown $max            
+     * @param unknown $str
+     * @param unknown $min
+     * @param unknown $max
      */
     function getRangeWidthWords($str, $min, $max)
     {
@@ -342,7 +366,7 @@ if (! function_exists('getRangeWidthWords')) {
         $i = 0;
         do {
             if ($prev == $length) {
-                $length --;
+                $length--;
             }
             $target = mb_substr($target, 0, $length);
             $component = getStrComponent($target);
@@ -352,7 +376,7 @@ if (! function_exists('getRangeWidthWords')) {
                 return $target;
             }
             $length = $length * $max / $width;
-            $i ++;
+            $i++;
             if ($i > 100)
                 break;
         } while ($width > $max);
@@ -360,7 +384,7 @@ if (! function_exists('getRangeWidthWords')) {
     }
 }
 
-if (! function_exists('runCustomValidator')) {
+if (!function_exists('runCustomValidator')) {
 
     /**
      * Run Constom Validator
@@ -380,8 +404,8 @@ if (! function_exists('runCustomValidator')) {
      *            ],</div>
      *            ]
      *            </pre>
-     * @throws \App\Exceptions\ServiceException
      * @return multitype:|boolean
+     * @throws \App\Exceptions\ServiceException
      */
     function runCustomValidator(array $input)
     {
@@ -393,7 +417,7 @@ if (! function_exists('runCustomValidator')) {
             'valueNames',
             'config'
         ]);
-        
+
         $config = isset($input['config']) ? $input['config'] : [];
         // Return (0) Or Exception(1)
         // First(0) Or All(1)
@@ -401,20 +425,20 @@ if (! function_exists('runCustomValidator')) {
             'ReturnOrException' => 1,
             'FirstOrAll' => 0
         ];
-        
+
         $config += $defaultConfig;
         $input = $input + [
-            'messages' => [],
-            'attributes' => [],
-            'valueNames' => [],
-            'config' => []
-        ];
+                'messages' => [],
+                'attributes' => [],
+                'valueNames' => [],
+                'config' => []
+            ];
         $validate = \Validator::make($input['data'], $input['rules'], $input['messages'], $input['attributes']);
-        
-        if (isset($input['valueNames']) && ! empty($input['valueNames'])) {
+
+        if (isset($input['valueNames']) && !empty($input['valueNames'])) {
             $validate->setValueNames($input['valueNames']);
         }
-        
+
         if ($validate->fails()) {
             $message = $validate->getMessageBag();
             $message->setFormat([
@@ -422,7 +446,7 @@ if (! function_exists('runCustomValidator')) {
                 'message' => ':message'
             ]);
             $errorMsg = $config['FirstOrAll'] ? $message->all() : $message->first();
-            
+
             if ($config['ReturnOrException']) {
                 if ($config['FirstOrAll']) {
                     $errors = [];
@@ -441,14 +465,14 @@ if (! function_exists('runCustomValidator')) {
     }
 }
 
-if (! function_exists('runValidator')) {
+if (!function_exists('runValidator')) {
 
     /**
      * 执行
      *
-     * @param array $data            
-     * @param array $rules            
-     * @param array $messages            
+     * @param array $data
+     * @param array $rules
+     * @param array $messages
      * @throws \App\Exceptions\ServiceException
      */
     function runValidator(array $data, array $rules, array $messages = [], array $customAttributes = [])
@@ -462,7 +486,7 @@ if (! function_exists('runValidator')) {
     }
 }
 
-if (! function_exists('mobileCheck')) {
+if (!function_exists('mobileCheck')) {
 
     /**
      * 检查手机号是否符合规则
@@ -475,11 +499,11 @@ if (! function_exists('mobileCheck')) {
     {
         // 手机号码的正则验证
         // return preg_match("/^13[0-9]{1}[0-9]{8}$|15[0189]{1}[0-9]{8}$|189[0-9]{8}$/",$phone);
-        return (! preg_match("/^(((13[0-9]{1})|(14[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/", $mobile)) ? false : true;
+        return (!preg_match("/^(((13[0-9]{1})|(14[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/", $mobile)) ? false : true;
     }
 }
 
-if (! function_exists('createSerialNum')) {
+if (!function_exists('createSerialNum')) {
 
     /*
      * 创建流水号
@@ -487,22 +511,22 @@ if (! function_exists('createSerialNum')) {
     function createSerialNum($num = 18)
     {
         list ($usec, $sec) = explode(" ", microtime());
-        
-        $usec = (int) ($usec * 1000000);
-        
+
+        $usec = (int)($usec * 1000000);
+
         $str = $sec . $usec . mt_rand(100000, 999999);
-        
+
         $str = substr($str, 0, $num);
-        
+
         if (strlen($str) < $num) {
             $str = str_pad($str, $num, mt_rand(100000, 999999));
         }
-        
+
         return $str;
     }
 }
 
-if (! function_exists('identityCardCheck')) {
+if (!function_exists('identityCardCheck')) {
 
     /**
      * 验证身份证号
@@ -550,41 +574,41 @@ if (! function_exists('identityCardCheck')) {
             '82',
             '91'
         );
-        
-        if (! preg_match('/^([\d]{17}[xX\d]|[\d]{15})$/', $vStr))
+
+        if (!preg_match('/^([\d]{17}[xX\d]|[\d]{15})$/', $vStr))
             return false;
-        
-        if (! in_array(substr($vStr, 0, 2), $vCity))
+
+        if (!in_array(substr($vStr, 0, 2), $vCity))
             return false;
-        
+
         $vStr = preg_replace('/[xX]$/i', 'a', $vStr);
         $vLength = strlen($vStr);
-        
+
         if ($vLength == 18) {
             $vBirthday = substr($vStr, 6, 4) . '-' . substr($vStr, 10, 2) . '-' . substr($vStr, 12, 2);
         } else {
             $vBirthday = '19' . substr($vStr, 6, 2) . '-' . substr($vStr, 8, 2) . '-' . substr($vStr, 10, 2);
         }
-        
+
         if (date('Y-m-d', strtotime($vBirthday)) != $vBirthday)
             return false;
         if ($vLength == 18) {
             $vSum = 0;
-            
-            for ($i = 17; $i >= 0; $i --) {
+
+            for ($i = 17; $i >= 0; $i--) {
                 $vSubStr = substr($vStr, 17 - $i, 1);
                 $vSum += (pow(2, $i) % 11) * (($vSubStr == 'a') ? 10 : intval($vSubStr, 11));
             }
-            
+
             if ($vSum % 11 != 1)
                 return false;
         }
-        
+
         return true;
     }
 }
 
-if (! function_exists('randStr')) {
+if (!function_exists('randStr')) {
 
     /**
      * 生成随机字符串
@@ -618,7 +642,7 @@ if (! function_exists('randStr')) {
     }
 }
 
-if (! function_exists('toFix')) {
+if (!function_exists('toFix')) {
 
     /**
      * 生成随机字符串
@@ -634,13 +658,13 @@ if (! function_exists('toFix')) {
     }
 }
 
-if (! function_exists('groupInsert')) {
+if (!function_exists('groupInsert')) {
 
     /**
      * Insert A Group Of Values
      *
-     * @param unknown $k            
-     * @param unknown $v            
+     * @param unknown $k
+     * @param unknown $v
      */
     function fireInsert($k, $v)
     {
@@ -656,8 +680,8 @@ if (! function_exists('groupInsert')) {
     /**
      * Group Insert
      *
-     * @param string $tbname            
-     * @param unknown $inputDate            
+     * @param string $tbname
+     * @param unknown $inputDate
      */
     function groupInsert($tbname = '', $inputDate = [])
     {
@@ -665,7 +689,7 @@ if (! function_exists('groupInsert')) {
         if ($tbname == '[fire]') {
             fireInsert($k, $v);
             $_queue = [];
-        } else 
+        } else
             if (substr_replace($tbname, '', 1, strlen($tbname) - 2) == '[]') {
                 $tbname = substr($tbname, 1, strlen($tbname) - 2);
                 fireInsert($tbname, $_queue[$tbname]);
@@ -679,20 +703,20 @@ if (! function_exists('groupInsert')) {
     }
 }
 
-if (! function_exists('mt_mark')) {
+if (!function_exists('mt_mark')) {
 
     /**
      * Calculates the Memory & Time difference between two marked points.
      *
-     * @param unknown $point1            
-     * @param string $point2            
-     * @param number $decimals            
+     * @param unknown $point1
+     * @param string $point2
+     * @param number $decimals
      * @return string|multitype:NULL
      */
     function mt_mark($point1 = '', $point2 = '', $unit = 'KB', $decimals = 4)
     {
         static $marker = [];
-        
+
         $units = [
             'B' => 1,
             'KB' => 1024,
@@ -702,23 +726,23 @@ if (! function_exists('mt_mark')) {
         $unit = isset($units[$unit]) ? $unit : 'KB';
         if ($point2 && $point1) {
             // 取件间隔
-            if (! isset($marker[$point1]))
+            if (!isset($marker[$point1]))
                 return false;
-            if (! isset($marker[$point2])) {
+            if (!isset($marker[$point2])) {
                 $marker[$point2] = [
                     'm' => memory_get_usage(),
                     't' => microtime()
                 ];
             }
-            
+
             list ($sm, $ss) = explode(' ', $marker[$point1]['t']);
             list ($em, $es) = explode(' ', $marker[$point2]['t']);
-            
+
             return [
                 't' => number_format(($em + $es) - ($sm + $ss), $decimals),
                 'm' => number_format(($marker[$point2]['m'] - $marker[$point1]['m']) / $units[$unit], $decimals)
             ];
-        } else 
+        } else
             if ($point1) {
                 // 设记录点
                 if ($point1 == '[clear]') {
@@ -736,14 +760,14 @@ if (! function_exists('mt_mark')) {
     }
 }
 
-if (! function_exists('funcCache')) {
+if (!function_exists('funcCache')) {
 
     /**
      * Cache function result and reflush every 5 second
      * Send a commend and unset the selected key
      *
-     * @param unknown $func            
-     * @param unknown $params            
+     * @param unknown $func
+     * @param unknown $params
      * @return mixed
      */
     function funcCache($func, $params = [], $expire = 5)
@@ -772,7 +796,7 @@ if (! function_exists('funcCache')) {
     }
 }
 
-if (! function_exists('__fsocket')) {
+if (!function_exists('__fsocket')) {
 
     function __async_curl($url, array $data = [], $host = '', $method = 'GET')
     {
@@ -819,20 +843,20 @@ if (! function_exists('__fsocket')) {
             $out .= "Connection: Close\r\n\r\n";
         }
         stream_set_blocking($fp, 0); // 开启了手册上说的非阻塞模式
-                                     // stream_set_timeout($fsp,1);//设置超时
+        // stream_set_timeout($fsp,1);//设置超时
         fwrite($fp, $out);
         // $row = fread($fp, 4096);
-        
+
         // while (!feof($fp)) {
         // echo fgets($fp, 128);
         // }
-        
+
         usleep(1000);
         fclose($fp);
     }
 }
 
-if (! function_exists('chineseWord')) {
+if (!function_exists('chineseWord')) {
 
     function firstName()
     {
@@ -877,7 +901,7 @@ if (! function_exists('chineseWord')) {
     {
         $str = '苗疆素来以蛊毒瘴气闻名多鬼狐精怪之事而其核心地十万大山更是神秘无比人迹罕至处古树高耸老藤如龙岳巍峨河流壮阔一派蛮荒的风貌深座脚下此时阵异歌声飘荡出王叫我巡喽完南北吆仿佛踏行道上现了个獐头鼠脑干瘦少年欢快唱着那谣眼珠子滴溜旋转给种极度明感觉令骇然他并非徒步胯有纯黑色皮毛豹副蔫样垂丧驮赶路许这扰兴致止住恶狠俯瞰身你懒散货前方便最后要查寨刻钟看到门否则会禀报想烧烤只幽灵墨趣呢两字似乎某魔力原本进浑忍不颤抖眸顿显惶恐态形纵已化作残影消失在留连串咒骂回虚空畜生慢点家铁柱爷掉足遍布盆内四平八稳端坐整理皱巴衣衫才倨傲喝葛些滚早等候伴随嘎吱打开中鱼贯群为首乃袍肥胖者毫犹豫率领众跪伏讨好九天青羽主拜见使祝敌岁咧嘴笑莫废话月们诸帮提供贡品可曾准备充切妥当请放小意您务必纳恭敬拿物双手奉睛亮脸露满伸取将入怀安得伙果亏待定面说几句言诚模很激动真太客数直混乱寇飞贼都啊若统实施仁慈政策何能走劳酬没间马屁腿夹再速踪确所尽闭塞始仅活也盘踞强盗却因发改变自幼被养育屠戮带妹侥幸逃凭借与狡诈辣性格女孩加日过刀肉般虽堪称胎食牛穷久展计做成立雄略断扩张杀股匪死五囊知晓奇术妖管什么邪竟奈震撼情鼎凶响彻近千碧祖二暴虐代表瑶善良她劝皆祥和需隔腹片澄净清澈湖泊畔壁株松苍翠条虬绿草茵尊香巨型铜三耳符文膝富正屈指弹缕火焰尖涌汇聚于悸热浪严丝合缝掩盖依旧扑鼻让孔舒通体服远站滔息望威猛霸别赫沉吟摆谱音刚落视跑谄媚潮汹念经传颂功德采对崇江水绵绝穿挪硕骚包抹额滋润分颜悦交办吩咐敢阿谀揖答案错起观烹煮美味吧七炉药金狮期嘿希突破瓶颈饕餮吞噬段引轩波存横法惊沦愿偿口又欲仙爽坏哥应今陪儿去玉菇怎崖就脆寒恨淡紫织锦腰束盈握肢乌秀编俏辫插枚桃花簪雪巧虹鞋皓白腕挂银圈尴尬乖顺像羊缩脖弱根据猜测关重底哼琼饶郁闷差哭哀怨怕宠溺噗嗤轻吐兰啦次算例听痛涕暖鸟由轰隆雷蒸腾霞光瑞彩澎湃紧跟氤氲赤雾冲同黄铸慑鬓耀爆炸冰冷宛祇降怒吼哈象丹袖掀璀璨燃挥抓摄呈终炼制浓汁淌简骨酥麻浩瀚粹量升脱换蜕越诞伦元相己枷锁谁隐晦闪烁陷暗锅倒扣振聋聩霆蜿蜒际电籍记载劫还罚呼瘫软茫渺沧海粟玩';
         $chineseWord = [];
-        for ($i = 0; $i < mb_strlen($str); $i ++) {
+        for ($i = 0; $i < mb_strlen($str); $i++) {
             $sub = mb_substr($str, $i, 1);
             $chineseWord[] = $sub;
         }
@@ -895,7 +919,7 @@ if (! function_exists('chineseWord')) {
         $word = chineseWord();
         $count = count($word);
         $str = '';
-        while (-- $n) {
+        while (--$n) {
             $str .= $word[random_int(0, $count - 1)];
         }
         return $firstname[array_rand($firstname)] . $str;
@@ -916,7 +940,7 @@ if (! function_exists('chineseWord')) {
             '18',
             '14'
         ];
-        
+
         $h = $data[random_int(0, 4)];
         $t = random_int(100000000, 999999999);
         return $h . $t;
@@ -925,7 +949,7 @@ if (! function_exists('chineseWord')) {
     /**
      * Get Chinese words in a given string
      *
-     * @param unknown $str            
+     * @param unknown $str
      * @return multitype:
      */
     function chineseWordGenerate($str)
@@ -938,9 +962,9 @@ if (! function_exists('chineseWord')) {
             '。'
         ];
         $chineseWord = [];
-        for ($i = 0; $i < mb_strlen($str); $i ++) {
+        for ($i = 0; $i < mb_strlen($str); $i++) {
             $sub = mb_substr($str, $i, 1);
-            if (preg_match("/[\x7f-\xff]/", $sub) && ! in_array($sub, $punctuation)) {
+            if (preg_match("/[\x7f-\xff]/", $sub) && !in_array($sub, $punctuation)) {
                 $chineseWord[] = $sub;
             }
         }
@@ -949,7 +973,7 @@ if (! function_exists('chineseWord')) {
     }
 }
 
-if (! function_exists('invokeMethod')) {
+if (!function_exists('invokeMethod')) {
 
     function getInvokeMethodArray($class, $method)
     {
@@ -973,7 +997,7 @@ if (! function_exists('invokeMethod')) {
     }
 }
 
-if (! function_exists('divide_equally')) {
+if (!function_exists('divide_equally')) {
 
     function divide_equally($price, $period)
     {
@@ -986,7 +1010,7 @@ if (! function_exists('divide_equally')) {
     }
 }
 
-if (! function_exists('echoArray')) {
+if (!function_exists('echoArray')) {
 
     function echoArray(array $arr)
     {
@@ -1007,7 +1031,7 @@ if (! function_exists('echoArray')) {
 
     /**
      *
-     * @param array $arr            
+     * @param array $arr
      */
     function echoArrayKV(array $arr, $lv = 1, $paddingLeft = "\t")
     {
@@ -1032,7 +1056,7 @@ if (! function_exists('echoArray')) {
     /**
      * 输出php语法的数组
      *
-     * @param array $arr            
+     * @param array $arr
      */
     function preArrayKV(array $arr, $lv = 1, $paddingLeft = "\t")
     {
@@ -1044,7 +1068,7 @@ if (! function_exists('echoArray')) {
     function getOnlineIp()
     {
         $OnlineIp = \LRedis::GET('OnlineIp');
-        if (! $OnlineIp) {
+        if (!$OnlineIp) {
             $url = 'http://city.ip138.com/ip2city.asp';
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -1072,7 +1096,7 @@ function unicode_encode($str, $encoding = 'GBK', $prefix = '&#', $postfix = ';')
     $str = iconv($encoding, 'UCS-2', $str);
     $arrstr = str_split($str, 2);
     $unistr = '';
-    for ($i = 0, $len = count($arrstr); $i < $len; $i ++) {
+    for ($i = 0, $len = count($arrstr); $i < $len; $i++) {
         $dec = hexdec(bin2hex($arrstr[$i]));
         $unistr .= $prefix . $dec . $postfix;
     }
@@ -1089,7 +1113,7 @@ function unicode_decode($unistr, $encoding = 'GBK', $prefix = '&#', $postfix = '
 {
     $arruni = explode($prefix, $unistr);
     $unistr = '';
-    for ($i = 1, $len = count($arruni); $i < $len; $i ++) {
+    for ($i = 1, $len = count($arruni); $i < $len; $i++) {
         if (strlen($postfix) > 0) {
             $arruni[$i] = substr($arruni[$i], 0, strlen($arruni[$i]) - strlen($postfix));
         }
@@ -1099,7 +1123,7 @@ function unicode_decode($unistr, $encoding = 'GBK', $prefix = '&#', $postfix = '
     return iconv('UCS-2', $encoding, $unistr);
 }
 
-if (! function_exists('getReturnInLogFile')) {
+if (!function_exists('getReturnInLogFile')) {
 
     /**
      * Applies the callback to the elements of the given arrays
@@ -1116,7 +1140,7 @@ if (! function_exists('getReturnInLogFile')) {
      */
     function array_map_recursive($callback, array $array1)
     {
-        return array_map(function ($v) use($callback) {
+        return array_map(function ($v) use ($callback) {
             if (is_array($v)) {
                 return array_map_recursive($callback, $v);
             } else {
@@ -1130,12 +1154,12 @@ if (! function_exists('getReturnInLogFile')) {
     /**
      * 减除过长连续数组
      *
-     * @param array $array1            
+     * @param array $array1
      * @return multitype:|multitype:Ambigous <> Ambigous <Ambigous <>>
      */
     function array_clear(array $array1, $limit = 5)
     {
-        return array_map(function ($v) use($limit) {
+        return array_map(function ($v) use ($limit) {
             if (is_array($v)) {
                 if (count($v) > $limit) {
                     $keyys = array_keys($v);
@@ -1181,7 +1205,7 @@ if (! function_exists('getReturnInLogFile')) {
     }
 }
 
-if (! function_exists('mark')) {
+if (!function_exists('mark')) {
 
     /**
      * Calculates the time difference between two marked points.
@@ -1194,19 +1218,19 @@ if (! function_exists('mark')) {
     function mark($point1, $point2 = '', $decimals = 4)
     {
         static $marker = [];
-        
+
         if ($point2 && $point1) {
-            if (! isset($marker[$point1]))
+            if (!isset($marker[$point1]))
                 return false;
-            if (! isset($marker[$point2])) {
+            if (!isset($marker[$point2])) {
                 $marker[$point2] = microtime();
             }
-            
+
             list ($sm, $ss) = explode(' ', $marker[$point1]);
             list ($em, $es) = explode(' ', $marker[$point2]);
-            
+
             return number_format(($em + $es) - ($sm + $ss), $decimals);
-        } else 
+        } else
             if ($point1) {
                 if ($point1 == '[clear]') {
                     $marker = [];
@@ -1230,7 +1254,7 @@ if (! function_exists('mark')) {
     function memory_mark($point1 = '', $point2 = '', $unit = 'KB', $decimals = 2)
     {
         static $marker = [];
-        
+
         $units = [
             'B' => 1,
             'KB' => 1024,
@@ -1240,14 +1264,14 @@ if (! function_exists('mark')) {
         $unit = isset($units[$unit]) ? $unit : 'KB';
         if ($point2 && $point1) {
             // 取件间隔
-            if (! isset($marker[$point1]))
+            if (!isset($marker[$point1]))
                 return false;
-            if (! isset($marker[$point2])) {
+            if (!isset($marker[$point2])) {
                 $marker[$point2] = memory_get_usage();
             }
-            
+
             return number_format(($marker[$point2] - $marker[$point1]) / $units[$unit], $decimals); // .' '.$unit;
-        } else 
+        } else
             if ($point1) {
                 // 设记录点
                 if ($point1 == '[clear]') {
@@ -1262,7 +1286,7 @@ if (! function_exists('mark')) {
     }
 
 
-    if (! function_exists('mt_mark')) {
+    if (!function_exists('mt_mark')) {
 
         /**
          * Calculates the Memory & Time difference between two marked points.
@@ -1276,7 +1300,7 @@ if (! function_exists('mark')) {
         function mt_mark($point1 = '', $point2 = '', $unit = 'KB', $decimals = 4)
         {
             static $marker = [];
-            
+
             $units = [
                 'B' => 1,
                 'KB' => 1024,
@@ -1286,23 +1310,23 @@ if (! function_exists('mark')) {
             $unit = isset($units[$unit]) ? $unit : 'KB';
             if ($point2 && $point1) {
                 // 取件间隔
-                if (! isset($marker[$point1]))
+                if (!isset($marker[$point1]))
                     return false;
-                if (! isset($marker[$point2])) {
+                if (!isset($marker[$point2])) {
                     $marker[$point2] = [
                         'm' => memory_get_usage(),
                         't' => microtime()
                     ];
                 }
-                
+
                 list ($sm, $ss) = explode(' ', $marker[$point1]['t']);
                 list ($em, $es) = explode(' ', $marker[$point2]['t']);
-                
+
                 return [
                     't' => number_format(($em + $es) - ($sm + $ss), $decimals),
                     'm' => number_format(($marker[$point2]['m'] - $marker[$point1]['m']) / $units[$unit], $decimals)
                 ];
-            } else 
+            } else
                 if ($point1) {
                     // 设记录点
                     if ($point1 == '[clear]') {
@@ -1333,9 +1357,9 @@ if (! function_exists('mark')) {
      *            ['categories' => range(1,20,1)]
      * @param array $series
      *            ['name' => '','data' =>[]]
-     * @param string $yAxis_title            
-     * @param string $title            
-     * @param string $subtitle            
+     * @param string $yAxis_title
+     * @param string $title
+     * @param string $subtitle
      * @return \Illuminate\Contracts\View\View
      */
     function chart(array $xAxis, array $series, $title = 'title', $subtitle = 'subtitle', $yAxis_title = 'yAxis_title')
@@ -1355,17 +1379,17 @@ if (! function_exists('mark')) {
         set_time_limit(170);
         $func_name = '';
         if (is_array($func)) {
-            if (! method_exists($func[0], $func[1])) {
+            if (!method_exists($func[0], $func[1])) {
                 return false;
             }
             $func_name = object_name($func[0]) . '->' . $func[1];
-        } else 
+        } else
             if (is_string($func)) {
-                if (! function_exists($func)) {
+                if (!function_exists($func)) {
                     return false;
                 }
                 $func_name = $func;
-            } else 
+            } else
                 if (is_callable($func)) {
                     // if(! function_exists($func)){
                     // return false;
@@ -1374,14 +1398,14 @@ if (! function_exists('mark')) {
                 } else {
                     return false;
                 }
-        
+
         $mem = [];
         $time = [];
         foreach ($params as $v) {
             mark('start');
-            
-            $result = call_user_func_array($func, (array) $v);
-            
+
+            $result = call_user_func_array($func, (array)$v);
+
             $time[] = floatval(mark('start', 'end'));
             $memory = memory_mark();
             if (isset($memory['start']) && isset($memory['end'])) {
@@ -1407,7 +1431,7 @@ if (! function_exists('mark')) {
     }
 }
 
-if (! function_exists('curl')) {
+if (!function_exists('curl')) {
 
     /**
      * @param $url
@@ -1429,18 +1453,18 @@ if (! function_exists('curl')) {
             'jpeg'
         ];
         $acceptExtensions = array_flip($acceptExtensions);
-        if (! isset($acceptExtensions[$extension = $originExtension])) {
-            if (! isset($acceptExtensions[$extension = substr($originExtension, 0, 3)])) {
-                if (! isset($acceptExtensions[$extension = substr($originExtension, 0, 4)])) {
+        if (!isset($acceptExtensions[$extension = $originExtension])) {
+            if (!isset($acceptExtensions[$extension = substr($originExtension, 0, 3)])) {
+                if (!isset($acceptExtensions[$extension = substr($originExtension, 0, 4)])) {
                     throw new \Exception('不支持扩展名');
                     //return false;
                 }
             }
         }
-        
-        ! is_dir($filePath) && @mkdir($filePath, 0755, true);
+
+        !is_dir($filePath) && @mkdir($filePath, 0755, true);
         $url = str_replace(" ", "%20", $url);
-        
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
@@ -1449,7 +1473,7 @@ if (! function_exists('curl')) {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1); // 跟踪301
         $temp = curl_exec($ch);
-        if (! curl_error($ch)) {
+        if (!curl_error($ch)) {
             if ($temp[0] == '<') {
                 return false;
 //                throw new \Exception('返回HTML');
@@ -1457,7 +1481,7 @@ if (! function_exists('curl')) {
             curl_close($ch);
             $sha1 = sha1(base64_encode($temp));
             $fileName = $filePath . '/' . $sha1 . '.' . $extension;
-            if (! is_file($fileName) && @file_put_contents($fileName, $temp)) {
+            if (!is_file($fileName) && @file_put_contents($fileName, $temp)) {
                 return $fileName;
             } else {
                 throw new \Exception('文件写入失败');
@@ -1474,9 +1498,9 @@ if (! function_exists('curl')) {
     {
         $file = empty($file) ? pathinfo($url, PATHINFO_BASENAME) : $file;
         $dir = pathinfo($file, PATHINFO_DIRNAME);
-        ! is_dir($dir) && @mkdir($dir, 0755, true);
+        !is_dir($dir) && @mkdir($dir, 0755, true);
         $url = str_replace(" ", "%20", $url);
-        
+
         if (function_exists('curl_init')) {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -1486,8 +1510,8 @@ if (! function_exists('curl')) {
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1); // 跟踪301
             $temp = curl_exec($ch);
-            
-            if (! curl_error($ch)) {
+
+            if (!curl_error($ch)) {
                 if ($temp[0] == '<') {
                     return false;
                 }
@@ -1529,7 +1553,7 @@ if (! function_exists('curl')) {
     {
         // $api = 'http://v.showji.com/Locating/showji.com20150416273007.aspx?output=json&m='.$phone;
         $ch = curl_init();
-        if (! empty($data)) {
+        if (!empty($data)) {
             $url = $url . '?' . http_build_query($data);
         }
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -1537,16 +1561,16 @@ if (! function_exists('curl')) {
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         $User_Agen = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36';
         curl_setopt($ch, CURLOPT_TIMEOUT, 5); // 设置超时
-                                              // curl_setopt($ch, CURLOPT_USERAGENT, $User_Agen); //用户访问代理 User-Agent
+        // curl_setopt($ch, CURLOPT_USERAGENT, $User_Agen); //用户访问代理 User-Agent
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1); // 跟踪301
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // 返回结果
         $config && curl_setopt_array($ch, $config);
         $result = curl_exec($ch);
-        if(false === $result){
-            throw new \Exception(curl_error($ch),curl_errno($ch));
+        if (false === $result) {
+            throw new \Exception(curl_error($ch), curl_errno($ch));
         }
         curl_close($ch);
-        if($json && false !== ($ret = is_json($result))){
+        if ($json && false !== ($ret = is_json($result))) {
             return $ret;
         }
         return $result;
@@ -1575,21 +1599,21 @@ if (! function_exists('curl')) {
         $ch = curl_multi_init();
         $count = count($query_arr);
         $ch_arr = array();
-        for ($i = 0; $i < $count; $i ++) {
+        for ($i = 0; $i < $count; $i++) {
             $query_string = $query_arr[$i];
             $ch_arr[$i] = curl_init($query_string);
             curl_setopt($ch_arr[$i], CURLOPT_RETURNTRANSFER, true);
-            
+
             curl_setopt($ch_arr[$i], CURLOPT_POST, 1);
             curl_setopt($ch_arr[$i], CURLOPT_POSTFIELDS, $data); // post 提交方式
-            
+
             curl_multi_add_handle($ch, $ch_arr[$i]);
         }
         $running = null;
         do {
             curl_multi_exec($ch, $running);
         } while ($running > 0);
-        for ($i = 0; $i < $count; $i ++) {
+        for ($i = 0; $i < $count; $i++) {
             $results[$i] = curl_multi_getcontent($ch_arr[$i]);
             curl_multi_remove_handle($ch, $ch_arr[$i]);
         }
@@ -1598,7 +1622,7 @@ if (! function_exists('curl')) {
     }
 }
 
-if (! function_exists('randStr')) {
+if (!function_exists('randStr')) {
 
     function randStr($len = 6, $format = 'NUMBER')
     {
@@ -1623,15 +1647,15 @@ if (! function_exists('randStr')) {
         return $password;
     }
 }
-if (! function_exists('edump')) {
+if (!function_exists('edump')) {
 
     /**
      * Dump And Exit
      *
-     * @param mix $var            
-     * @param string $echo            
-     * @param string $label            
-     * @param string $strict            
+     * @param mix $var
+     * @param string $echo
+     * @param string $label
+     * @param string $strict
      */
     function edump()
     {
@@ -1650,7 +1674,7 @@ if (! function_exists('edump')) {
     }
 }
 
-if (! function_exists('sql')) {
+if (!function_exists('sql')) {
 
     /**
      * Echo An Sql Statment Friendly
@@ -1664,15 +1688,15 @@ if (! function_exists('sql')) {
     function sql($subject, array $binds = [], $spe = '<br/>')
     {
         $pattern = '/(select\s+|from\s+|where\s+|and\s+|or\s+|\s+limit|,|(?:left|right|inner)\s+join)/i';
-        
+
         $var = preg_replace($pattern, $spe . '\\1', $subject);
-        
+
         $i = 0;
-        
-        $binds && $var = preg_replace_callback('/\?/', function ($matchs) use(&$i, $binds) {
-            return '\'' . $binds[$i ++] . '\'';
+
+        $binds && $var = preg_replace_callback('/\?/', function ($matchs) use (&$i, $binds) {
+            return '\'' . $binds[$i++] . '\'';
         }, $var);
-        
+
         echo $var . $spe;
     }
 
@@ -1697,7 +1721,7 @@ if (! function_exists('sql')) {
     }
 }
 
-if (! function_exists('object_name')) {
+if (!function_exists('object_name')) {
 
     /**
      * 获取对象的类名
@@ -1745,7 +1769,7 @@ if (! function_exists('object_name')) {
             $offset = $rowsNum - $start;
         }
         $fileList = array();
-        for ($i = $start; $max = $start + $offset, $i < $max; $i ++) {
+        for ($i = $start; $max = $start + $offset, $i < $max; $i++) {
             $fileList[] = $rows[$i]; // substr($rows[$i], 0, - 1);// 为了去掉\r\n
         }
         return $fileList;
@@ -1755,14 +1779,7 @@ if (! function_exists('object_name')) {
      * Get The Anntation Array Of Given Function
      *
      * @param callable $function
-     * @return boolean|array:multitype:multitype:string <pre>
-     *         $data = [
-     *         '@return' => [
-     *              'name' => '',
-     *              'type' => '',
-     *              'note' => ''
-     *         ],
-     *         '@param' => [
+     * @param' => [
      *              'name' => '',
      *              'type' => '',
      *              'note' => ''
@@ -1772,67 +1789,74 @@ if (! function_exists('object_name')) {
      *         ],
      *         ];
      *         </pre>
-     */
+     * @return' => [
+     *              'name' => '',
+     *              'type' => '',
+     *              'note' => ''
+     *         ],
+     *         '@return boolean|array:multitype:multitype:string <pre>
+     *         $data = [
+     *         '/
     function getAnnotation($function)
     {
-        $reflect = getFunctionReflection($function);
-        if ($reflect === false)
-            return false;
-        $start = $reflect->getStartLine() - 1;
-        $end = $reflect->getEndLine();
-        $file = $reflect->getFileName();
-        $offset = $end - $start;
-        $rows = file($file);
-        $rowsNum = count($rows);
-        $annotation = [];
-        $i = $start - 1;
-        
-        while (($ann = trim($rows[$i --])) && (strpos($ann, '//') === 0 || strpos($ann, '*') === 0 || strpos($ann, '/*') === 0)) {
-            ($ann = trim($ann, "/* \t")) && $annotation[] = $ann;
-        }
-        $annData = [];
-        $tmp = [];
-        foreach ($annotation as $value) {
-            if (stripos($value, '@') === 0) {
-                // TODO::Process @Return
-                $exp = explode(' ', $value);
-                $count = count($exp);
-                $attr = [];
-                if ($count == 2) {
-                    $attr = [
-                        'type' => $exp[1]
-                    ];
-                } else 
-                    if ($count >= 3) {
-                        $attr = [
-                            'type' => $exp[1],
-                            'name' => $exp[2]
-                        ];
-                        for ($i = 3; $i < $count; $i ++) {
-                            $tmp[] = $exp[$i];
-                        }
-                    } else {
-                        continue;
-                    }
-                if ($tmp) {
-                    $tmp = array_reverse($tmp);
-                    $tmp = implode(' ', $tmp);
-                    $attr['note'] = $tmp;
-                }
-                $annData[$exp[0]][] = $attr;
-                $tmp = [];
-            } else {
-                $tmp[] = $value;
-            }
-        }
-        if ($tmp) {
-            $tmp = array_reverse($tmp);
-            $tmp = implode(' ', $tmp);
-            $annData['function'] = [
-                'note' => $tmp
-            ];
-        }
-        return $annData;
+    $reflect = getFunctionReflection($function);
+    if ($reflect === false)
+    return false;
+    $start = $reflect->getStartLine() - 1;
+    $end = $reflect->getEndLine();
+    $file = $reflect->getFileName();
+    $offset = $end - $start;
+    $rows = file($file);
+    $rowsNum = count($rows);
+    $annotation = [];
+    $i = $start - 1;
+
+    while (($ann = trim($rows[$i --])) && (strpos($ann, '//') === 0 || strpos($ann, '*') === 0 || strpos($ann, '/*') === 0)) {
+    ($ann = trim($ann, "/* \t")) && $annotation[] = $ann;
+    }
+    $annData = [];
+    $tmp = [];
+    foreach ($annotation as $value) {
+    if (stripos($value, '@') === 0) {
+    // TODO::Process @Return
+    $exp = explode(' ', $value);
+    $count = count($exp);
+    $attr = [];
+    if ($count == 2) {
+    $attr = [
+    'type' => $exp[1]
+    ];
+    } else
+    if ($count >= 3) {
+    $attr = [
+    'type' => $exp[1],
+    'name' => $exp[2]
+    ];
+    for ($i = 3; $i < $count; $i ++) {
+    $tmp[] = $exp[$i];
+    }
+    } else {
+    continue;
+    }
+    if ($tmp) {
+    $tmp = array_reverse($tmp);
+    $tmp = implode(' ', $tmp);
+    $attr['note'] = $tmp;
+    }
+    $annData[$exp[0]][] = $attr;
+    $tmp = [];
+    } else {
+    $tmp[] = $value;
+    }
+    }
+    if ($tmp) {
+    $tmp = array_reverse($tmp);
+    $tmp = implode(' ', $tmp);
+    $annData['function'] = [
+    'note' => $tmp
+    ];
+    }
+    return $annData;
     }
 
     /**
@@ -1903,7 +1927,7 @@ if (! function_exists('object_name')) {
     }
 }
 
-if (! function_exists('lode')) {
+if (!function_exists('lode')) {
 
     /**
      * 分割数组或字符串处理
@@ -1912,8 +1936,8 @@ if (! function_exists('lode')) {
      *            : , | @
      * @param string $data
      *            : array|string
-     * @internal string $type ->a=array ->explode || $type ->s=string ->implode
      * @return array|string
+     * @internal string $type ->a=array ->explode || $type ->s=string ->implode
      */
     function lode($type, $data)
     {
@@ -1925,13 +1949,13 @@ if (! function_exists('lode')) {
     }
 }
 
-if (! function_exists('createInsertSql')) {
+if (!function_exists('createInsertSql')) {
 
     /**
      * Create An Insert Sql Statement
      *
-     * @param string $tbname            
-     * @param array $data            
+     * @param string $tbname
+     * @param array $data
      * @return string
      */
     function createInsertSql($tbname, array $data)
@@ -1968,8 +1992,8 @@ if (! function_exists('createInsertSql')) {
     /**
      * Create An Insert Sql Statement With Param Placeholder
      *
-     * @param string $tbname            
-     * @param array $data            
+     * @param string $tbname
+     * @param array $data
      * @return array
      */
     function createInsertSqlBind($tbname, array $data)
@@ -1987,14 +2011,14 @@ if (! function_exists('createInsertSql')) {
     }
 }
 
-if (! function_exists('createUpdateSql')) {
+if (!function_exists('createUpdateSql')) {
 
     /**
      * Create A Update Sql Statement
      *
-     * @param string $tbname            
-     * @param array $data            
-     * @param string $where            
+     * @param string $tbname
+     * @param array $data
+     * @param string $where
      * @return string
      */
     function createUpdateSql($tbname, array $data, $where = '')
@@ -2019,7 +2043,7 @@ if (! function_exists('createUpdateSql')) {
     }
 }
 
-if (! function_exists('old')) {
+if (!function_exists('old')) {
 
     /**
      * Get Previous Form Field Data
@@ -2034,7 +2058,7 @@ if (! function_exists('old')) {
     }
 }
 
-if (! function_exists('insert')) {
+if (!function_exists('insert')) {
 
     /**
      * Execute Insert Sql Statment
@@ -2050,7 +2074,7 @@ if (! function_exists('insert')) {
     }
 }
 
-if (! function_exists('update')) {
+if (!function_exists('update')) {
 
     /**
      * Execute Update Sql Statment
@@ -2066,7 +2090,7 @@ if (! function_exists('update')) {
         return DB::update($sql);
     }
 }
-if (! function_exists('lastInsertId')) {
+if (!function_exists('lastInsertId')) {
 
     /**
      * Get Last Insert Id
@@ -2076,7 +2100,7 @@ if (! function_exists('lastInsertId')) {
         return DB::getPdo()->lastInsertId();
     }
 }
-if (! function_exists('lastSql')) {
+if (!function_exists('lastSql')) {
 
     /**
      * Get Last Query
