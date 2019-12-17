@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>mqtt & simple & requireJS</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+        .dev-container {
+            width:100%;
+            display: inline-flex;
+            height: 400px;
+            background:#ccc;
+        }
+        .dev-console {
+            width:100%;
+            height: 200px;
+            background:#ffcccc;
+        }
+        .dev-tab {
+            margin-left:20px;
+        }
+        .dev-attrs {
+            width:30%;
+            background:#fcffff;
+        }
+        .dev-controls {
+            width:30%;
+            background:#dcdcff;
+        }
+        .dev-playzone {
+            width:30%;
+            background:#9bff9b;
+        }
+        
+        .span-attr-value {
+            left: 204px;
+            position: absolute;
+        }
+        .hide {
+            display : none;
+        }
+        .dev-cnt-tb{
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="dev-init-redo hide">
+        <button class="reconnect-btn">重新连接</button>
+        <button class="disconnect-btn">断开连接</button>
+    
+    </div>
+    <div class="dev-init">
+        <table class="dev-cnt-tb">
+            <tr>
+                <td>DeviceAccessKey</td><td><input type="text" name="accessKey" value="aaaaaaaaaa"></td>
+            </tr>
+            <tr>
+                <td>DeviceAccessSecret</td><td><input type="text" name="accessSecret" value="ssssssssss"></td>
+            </tr>
+            <tr>
+                <td>LogLevel</td>
+                <td>
+                    <select name="logLevel">
+                        <option value="debug">debug</option>
+                        <option value="debug">info</option>
+                        <option value="debug">notice</option>
+                        <option value="debug">warning</option>
+                        <option value="debug">error</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>环境</td>
+                <td>
+                    <select name="env">
+                        <option value="test">测试(121.41.33.141:8083)</option>
+                        <option value="local">本地(192.168.5.61:8083)</option>
+                        <option value="production">正式(120.26.109.169:8083)</option>
+                        <option value="local-win">本地(127.0.0.1:8083)</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td><td><button class="dev-cnt-btn">连接</button></td>
+            </tr>
+        </table>
+    </div>
+    <div class="dev-container hide" id="app" >
+        <div class="dev-tab dev-attrs">
+            <div>
+			  <ol>
+			    <li v-for="(item, index) in attrs">
+			      {{ attrsName[index] }} <span v-bind:id="'dev-attr-' + index" class="span-attr-value"> - {{ item }}</span>
+			    </li>
+			  </ol>
+			</div>
+        </div>
+        <div class="dev-tab dev-controls">
+            <template v-for="(item, index) in model.controls">
+                <div>
+                    <span>{{item.identity}} - {{item.name}}</span>
+                    <pre v-if="item['switch']">{{item.switch.status | switchStatus }} {{item['switch']}}</pre>
+                    <pre v-if="item['slider']">{{item['slider']}}</pre>
+                    <pre v-if="item['spin']">{{item['spin']}}</pre>
+                    <pre v-if="item['switch_slider']">{{item.switch_slider.status | switchStatus }}{{item['switch_slider']}}</pre>
+                </div>
+            </template>
+        </div>
+        <div class="dev-tab dev-playzone">
+            <template v-for="(item, index) in Log">
+                <div>
+                    <span>{{item.date}} : {{item.msg}}</span>
+                </div>
+             </template>
+        </div>
+    </div> 
+    <div class="dev-console hide">
+    </div>
+    <script data-main="device-test" src="../lib/require.js"></script>
+</body>
+</html>
