@@ -1,3 +1,5 @@
+drop database if exists smell_open;
+create database smell_open;
 use smell_open;
 /*
 Navicat MySQL Data Transfer
