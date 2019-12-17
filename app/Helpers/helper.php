@@ -1,5 +1,6 @@
 <?php
 
+
 if (! function_exists('reverseScandir')) {
 
     function reverseScandir($basePath,$prefix = '',$opts = []){
@@ -41,11 +42,11 @@ if (! function_exists('base32_encode')) {
         $rest = 0;
         $restLen = 0;
         for($i = 0 ; $i < $len ; $i ++ ){
-            $chrCode = ord($str{$i});
-            $thisByte = $rest << 8 | $chrCode;
+            $chrCode = ord($str[$i]);
+            $thisByte = ($rest << 8) | $chrCode;
             $thisByteLen = $restLen + 8;
             while($thisByteLen >= 5){
-                $b32 .= $base32Map{$thisByte >> ($thisByteLen - 5)};
+                $b32 .= $base32Map[$thisByte >> ($thisByteLen - 5)];
                 $thisByteLen -= 5;
                 $thisByte = $thisByte & (pow(2,$thisByteLen) - 1);
             }
@@ -54,7 +55,7 @@ if (! function_exists('base32_encode')) {
         }
         if($restLen > 0){
             $rest = $rest << ( 5 - $restLen);
-            $b32 .= $base32Map{$rest};
+            $b32 .= $base32Map[$rest];
         }
         return $b32;
     }
@@ -1169,7 +1170,7 @@ if (! function_exists('getReturnInLogFile')) {
                 }
             }
             $len = strlen($rt);
-            if ($len && $rt{0} == '{' && $rt{$len - 1} == '}') {
+            if ($len && $rt[0] == '{' && $rt[$len - 1] == '}') {
                 $mt = json_decode($rt, true);
                 if (json_last_error() == JSON_ERROR_NONE) {
                     return json_decode_recursive($mt);
@@ -1185,10 +1186,10 @@ if (! function_exists('mark')) {
     /**
      * Calculates the time difference between two marked points.
      *
-     * @param unknown $point1            
-     * @param string $point2            
-     * @param number $decimals            
-     * @return string|multitype:NULL
+     * @param string $point1
+     * @param string $point2
+     * @param int $decimals
+     * @return string|array
      */
     function mark($point1, $point2 = '', $decimals = 4)
     {
@@ -1220,10 +1221,11 @@ if (! function_exists('mark')) {
     /**
      * Calculates the Memory difference between two marked points.
      *
-     * @param unknown $point1            
-     * @param string $point2            
-     * @param number $decimals            
-     * @return string|multitype:NULL
+     * @param string $point1
+     * @param string $point2
+     * @param string $unit
+     * @param int $decimals
+     * @return string|array
      */
     function memory_mark($point1 = '', $point2 = '', $unit = 'KB', $decimals = 2)
     {
@@ -1258,16 +1260,18 @@ if (! function_exists('mark')) {
                 return $marker;
             }
     }
-    
+
+
     if (! function_exists('mt_mark')) {
 
         /**
          * Calculates the Memory & Time difference between two marked points.
          *
-         * @param unknown $point1            
-         * @param string $point2            
-         * @param number $decimals            
-         * @return string|multitype:NULL
+         * @param string $point1
+         * @param string $point2
+         * @param string $unit
+         * @param int $decimals
+         * @return string|array
          */
         function mt_mark($point1 = '', $point2 = '', $unit = 'KB', $decimals = 4)
         {
@@ -1318,7 +1322,7 @@ if (! function_exists('mark')) {
 
     function dmt_mark($point1 = '', $point2 = '', $unit = 'MB', $decimals = 4)
     {
-        redline($point1 . ' - ' . $point2);
+        // redline($point1 . ' - ' . $point2);
         $res = mt_mark($point1, $point2, $unit, $decimals);
         dump($res);
     }
@@ -1332,7 +1336,7 @@ if (! function_exists('mark')) {
      * @param string $yAxis_title            
      * @param string $title            
      * @param string $subtitle            
-     * @return \Illuminate\View\$this
+     * @return \Illuminate\Contracts\View\View
      */
     function chart(array $xAxis, array $series, $title = 'title', $subtitle = 'subtitle', $yAxis_title = 'yAxis_title')
     {
@@ -1405,6 +1409,13 @@ if (! function_exists('mark')) {
 
 if (! function_exists('curl')) {
 
+    /**
+     * @param $url
+     * @param string $filePath
+     * @param int $timeout
+     * @return bool|string
+     * @throws Exception
+     */
     function httpDownloadSha1($url, $filePath = "Download", $timeout = 60)
     {
         $pathinfo = pathinfo($url);
@@ -1422,7 +1433,7 @@ if (! function_exists('curl')) {
             if (! isset($acceptExtensions[$extension = substr($originExtension, 0, 3)])) {
                 if (! isset($acceptExtensions[$extension = substr($originExtension, 0, 4)])) {
                     throw new \Exception('不支持扩展名');
-                    return false;
+                    //return false;
                 }
             }
         }
@@ -1439,9 +1450,9 @@ if (! function_exists('curl')) {
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1); // 跟踪301
         $temp = curl_exec($ch);
         if (! curl_error($ch)) {
-            if ($temp{0} == '<') {
+            if ($temp[0] == '<') {
                 return false;
-                throw new \Exception('返回HTML');
+//                throw new \Exception('返回HTML');
             }
             curl_close($ch);
             $sha1 = sha1(base64_encode($temp));
@@ -1450,7 +1461,7 @@ if (! function_exists('curl')) {
                 return $fileName;
             } else {
                 throw new \Exception('文件写入失败');
-                return false;
+//                return false;
             }
         } else {
             edump(curl_errno($ch));
@@ -1477,7 +1488,7 @@ if (! function_exists('curl')) {
             $temp = curl_exec($ch);
             
             if (! curl_error($ch)) {
-                if ($temp{0} == '<') {
+                if ($temp[0] == '<') {
                     return false;
                 }
                 if (@file_put_contents($file, $temp)) {
@@ -1504,13 +1515,15 @@ if (! function_exists('curl')) {
         }
     }
 
-    
+
     /**
-     * 
-     * @param unknown $url
+     *
+     * @param string $url
      * @param array $data
-     * @param string $json
+     * @param bool $json
      * @param array $config
+     * @return bool|mixed|string
+     * @throws Exception
      */
     function curl_get($url, array $data = [], $json = true, array $config = [])
     {
@@ -1646,7 +1659,7 @@ if (! function_exists('sql')) {
      *            Sql Statment
      * @param array $binds
      *            The Bind Params
-     * @return unknown
+     * @param string $spe
      */
     function sql($subject, array $binds = [], $spe = '<br/>')
     {
@@ -1674,6 +1687,7 @@ if (! function_exists('sql')) {
 
     /**
      * Echo Last Sql And Exit
+     * @param string $spe
      */
     function esqlLastSql($spe = '<br/>')
     {
@@ -1688,7 +1702,8 @@ if (! function_exists('object_name')) {
     /**
      * 获取对象的类名
      *
-     * @param unknown $name            
+     * @param object $name
+     * @return false|string
      */
     function object_name($name)
     {
@@ -1698,7 +1713,7 @@ if (! function_exists('object_name')) {
     /**
      * Dump The Class Name Of An Given Object
      *
-     * @param String $obj
+     * @param object $obj
      *            The Given Object
      */
     function dump_object_name($obj)
@@ -1739,8 +1754,8 @@ if (! function_exists('object_name')) {
     /**
      * Get The Anntation Array Of Given Function
      *
-     * @param unknown $function            
-     * @return boolean|multitype:multitype:multitype:string <pre>
+     * @param callable $function
+     * @return boolean|array:multitype:multitype:string <pre>
      *         $data = [
      *         '@return' => [
      *              'name' => '',
@@ -1823,8 +1838,8 @@ if (! function_exists('object_name')) {
     /**
      * Get The Paramaters Of Given Function
      *
-     * @param unknown $function            
-     * @return boolean|multitype:NULL
+     * @param callable $function
+     * @return boolean|array
      */
     function getFunctionParamaters($function)
     {
@@ -1842,9 +1857,9 @@ if (! function_exists('object_name')) {
     /**
      * 获取方法的反射
      *
-     * @param string|array $function
-     *            方法名
+     * @param $name
      * @return boolean|ReflectionFunction
+     * @throws ReflectionException
      */
     function getFunctionReflection($name)
     {
@@ -1867,8 +1882,10 @@ if (! function_exists('object_name')) {
     /**
      * 获取方法的代码
      *
-     * @param unknown $name            
-     * @return boolean|multitype:Ambigous
+     * @param $name
+     * @param bool $show
+     * @return boolean|array
+     * @throws ReflectionException
      */
     function getFunctionDeclaration($name, $show = false)
     {
@@ -1893,10 +1910,10 @@ if (! function_exists('lode')) {
      *
      * @param string $type
      *            : , | @
-     * @param type $data
+     * @param string $data
      *            : array|string
      * @internal string $type ->a=array ->explode || $type ->s=string ->implode
-     * @return array string
+     * @return array|string
      */
     function lode($type, $data)
     {
@@ -1953,7 +1970,7 @@ if (! function_exists('createInsertSql')) {
      *
      * @param string $tbname            
      * @param array $data            
-     * @return multitype:string multitype:
+     * @return array
      */
     function createInsertSqlBind($tbname, array $data)
     {
@@ -2007,8 +2024,9 @@ if (! function_exists('old')) {
     /**
      * Get Previous Form Field Data
      *
-     * @param string $key            
-     * @param string $default            
+     * @param string $key
+     * @param string $default
+     * @return array|string
      */
     function old($key = null, $default = null)
     {
@@ -2021,8 +2039,9 @@ if (! function_exists('insert')) {
     /**
      * Execute Insert Sql Statment
      *
-     * @param unknown $table            
-     * @param array $data            
+     * @param string $table
+     * @param array $data
+     * @return bool
      */
     function insert($table, array $data)
     {
@@ -2036,9 +2055,10 @@ if (! function_exists('update')) {
     /**
      * Execute Update Sql Statment
      *
-     * @param unknown $table            
-     * @param array $data            
-     * @param unknown $where            
+     * @param string $table
+     * @param array $data
+     * @param string $where
+     * @return int
      */
     function update($table, array $data, $where)
     {

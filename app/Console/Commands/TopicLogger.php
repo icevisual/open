@@ -188,7 +188,8 @@ class TopicLogger extends Command
             'timeout' => new IntervalCounter($groupInterval)
         ];
         
-        $callback = function ($info, &$ret, &$sequence) use($t, $groupInterval, &$sequence, &$answeredReqNum, &$timeoutLimit) {
+        $callback = function ($info, &$ret, &$sequence)
+            use($t, $groupInterval, &$sequence, &$answeredReqNum, &$timeoutLimit) {
             $SEQUENCE_NUMBER = $info['header']['SEQUENCE_NUMBER'];
             if (isset($sequence[$SEQUENCE_NUMBER])) {
                 
@@ -248,7 +249,7 @@ class TopicLogger extends Command
         
         file_put_contents(public_path($dist), $dfile);
         
-        shell_exec('start chrome open.smell.com/' . $dist);
+        shell_exec('start chrome smell.open.com/' . $dist);
     }
 
     public function columnAction()
