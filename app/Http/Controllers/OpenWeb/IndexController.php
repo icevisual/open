@@ -42,6 +42,7 @@ class IndexController extends Controller
     }
     
     public function developer(){
+        \Log::info("\Auth::guest()  = ".\Auth::guest() );
         return view('open.index.developer')->with([
             'isLogin' => \Auth::guest() ? 0 : 1
         ]);

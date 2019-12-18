@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Open;
 
+use App\Extensions\Verify\XmasCaptcha;
 use App\Http\Controllers\Controller;
 use App\Models\User\Account;
 use App\Models\Common\Region;
@@ -88,7 +89,7 @@ class OpenController extends Controller
             'height' => 30,
             'backgroundColor' => "#FFFFFF"
         ];
-        $captcha = new \App\Extensions\Verify\XmasCaptcha($config);
+        $captcha = new XmasCaptcha($config);
         $captcha->entry('register');
     }
 

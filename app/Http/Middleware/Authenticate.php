@@ -17,10 +17,12 @@ class Authenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        \Log::debug(\Auth::user());
         if (Auth::guard($guard)->guest()) {
             if ($request->ajax() || $request->wantsJson()) {
                 return \JsonReturn::json('请先登录',\ErrorCode::UNAUTHORIZED);
             } else {
+                \Log::info("=> developer");
                 return redirect()->guest(route('developer'));
             }
         }

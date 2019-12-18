@@ -147,7 +147,8 @@ class LoginController extends Controller
                 'account' => $data['account'],
                 'password' => $data['password']
             ), $remember)) {
-                
+                \Log::debug("login => index");
+                \Log::debug(\Auth::user());
                 if($info->email_activation == Account::EMAIL_ACTIVATION_NO){
                     \Auth::logout();
                     throw new ServiceException('账号未注册', \ErrorCode::AUTH_FAILED);
