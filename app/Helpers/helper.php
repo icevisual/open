@@ -1,27 +1,4 @@
 <?php
-$a = 4;
-$c = 2;
-
-class CCCCCC
-{
-    function __call($name, $arguments)
-    {
-        echo "__call" . PHP_EOL;
-
-    }
-}
-
-$cc = new CCCCCC();
-
-echo $b ?? -4 + $a ?? $c;
-echo PHP_EOL;
-
-echo $a ?? 0 + $b ?? 0 + $c ?? 0; // 4
-echo PHP_EOL;
-echo ($a ?? 0) + ($b ?? 0) + ($c ?? 0); // 6
-echo PHP_EOL;
-echo $a ?? (0 + $b) ?? (0 + $c) ?? 0; // 4
-echo PHP_EOL;
 
 if (!function_exists('reverseScandir')) {
 
@@ -1789,81 +1766,81 @@ if (!function_exists('object_name')) {
      *         ],
      *         ];
      *         </pre>
+     * @param callable $function
+     * @return boolean|array:multitype:multitype:string <pre>
+     *         $data = [
+     *         '/
+     * function getAnnotation($function)
+     * {
+     * $reflect = getFunctionReflection($function);
+     * if ($reflect === false)
+     * return false;
+     * $start = $reflect->getStartLine() - 1;
+     * $end = $reflect->getEndLine();
+     * $file = $reflect->getFileName();
+     * $offset = $end - $start;
+     * $rows = file($file);
+     * $rowsNum = count($rows);
+     * $annotation = [];
+     * $i = $start - 1;
+     *
+     * while (($ann = trim($rows[$i --])) && (strpos($ann, '//') === 0 || strpos($ann, '*') === 0 || strpos($ann, '/*') === 0)) {
+     * ($ann = trim($ann, "/* \t")) && $annotation[] = $ann;
+     * }
+     * $annData = [];
+     * $tmp = [];
+     * foreach ($annotation as $value) {
+     * if (stripos($value, '@') === 0) {
+     * // TODO::Process @Return
+     * $exp = explode(' ', $value);
+     * $count = count($exp);
+     * $attr = [];
+     * if ($count == 2) {
+     * $attr = [
+     * 'type' => $exp[1]
+     * ];
+     * } else
+     * if ($count >= 3) {
+     * $attr = [
+     * 'type' => $exp[1],
+     * 'name' => $exp[2]
+     * ];
+     * for ($i = 3; $i < $count; $i ++) {
+     * $tmp[] = $exp[$i];
+     * }
+     * } else {
+     * continue;
+     * }
+     * if ($tmp) {
+     * $tmp = array_reverse($tmp);
+     * $tmp = implode(' ', $tmp);
+     * $attr['note'] = $tmp;
+     * }
+     * $annData[$exp[0]][] = $attr;
+     * $tmp = [];
+     * } else {
+     * $tmp[] = $value;
+     * }
+     * }
+     * if ($tmp) {
+     * $tmp = array_reverse($tmp);
+     * $tmp = implode(' ', $tmp);
+     * $annData['function'] = [
+     * 'note' => $tmp
+     * ];
+     * }
+     * return $annData;
+     * }
+     *
+     * /**
+     * Get The Paramaters Of Given Function
+     *
      * @return' => [
      *              'name' => '',
      *              'type' => '',
      *              'note' => ''
      *         ],
-     *         '@return boolean|array:multitype:multitype:string <pre>
-     *         $data = [
-     *         '/
-    function getAnnotation($function)
-    {
-    $reflect = getFunctionReflection($function);
-    if ($reflect === false)
-    return false;
-    $start = $reflect->getStartLine() - 1;
-    $end = $reflect->getEndLine();
-    $file = $reflect->getFileName();
-    $offset = $end - $start;
-    $rows = file($file);
-    $rowsNum = count($rows);
-    $annotation = [];
-    $i = $start - 1;
-
-    while (($ann = trim($rows[$i --])) && (strpos($ann, '//') === 0 || strpos($ann, '*') === 0 || strpos($ann, '/*') === 0)) {
-    ($ann = trim($ann, "/* \t")) && $annotation[] = $ann;
-    }
-    $annData = [];
-    $tmp = [];
-    foreach ($annotation as $value) {
-    if (stripos($value, '@') === 0) {
-    // TODO::Process @Return
-    $exp = explode(' ', $value);
-    $count = count($exp);
-    $attr = [];
-    if ($count == 2) {
-    $attr = [
-    'type' => $exp[1]
-    ];
-    } else
-    if ($count >= 3) {
-    $attr = [
-    'type' => $exp[1],
-    'name' => $exp[2]
-    ];
-    for ($i = 3; $i < $count; $i ++) {
-    $tmp[] = $exp[$i];
-    }
-    } else {
-    continue;
-    }
-    if ($tmp) {
-    $tmp = array_reverse($tmp);
-    $tmp = implode(' ', $tmp);
-    $attr['note'] = $tmp;
-    }
-    $annData[$exp[0]][] = $attr;
-    $tmp = [];
-    } else {
-    $tmp[] = $value;
-    }
-    }
-    if ($tmp) {
-    $tmp = array_reverse($tmp);
-    $tmp = implode(' ', $tmp);
-    $annData['function'] = [
-    'note' => $tmp
-    ];
-    }
-    return $annData;
-    }
-
-    /**
-     * Get The Paramaters Of Given Function
-     *
-     * @param callable $function
-     * @return boolean|array
+     *         '@return boolean|array
      */
     function getFunctionParamaters($function)
     {

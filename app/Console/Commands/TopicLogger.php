@@ -189,7 +189,8 @@ class TopicLogger extends Command
         ];
         
         $callback = function ($info, &$ret, &$sequence)
-            use($t, $groupInterval, &$sequence, &$answeredReqNum, &$timeoutLimit) {
+            use($t, $groupInterval, &$answeredReqNum, &$timeoutLimit) {
+//        use($t, $groupInterval, &$sequence, &$answeredReqNum, &$timeoutLimit) {
             $SEQUENCE_NUMBER = $info['header']['SEQUENCE_NUMBER'];
             if (isset($sequence[$SEQUENCE_NUMBER])) {
                 
@@ -522,6 +523,6 @@ class IntervalCounter
         ];
     }
 }
-;
+
 
 

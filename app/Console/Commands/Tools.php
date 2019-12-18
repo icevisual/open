@@ -751,11 +751,11 @@ EOL;
         for ($i = 0; $i < $count; $i ++) {
             $line = trim($contentArray[$i]);
             // enum
-            if (strlen($line) > 4 && $line{0} == 'e' && $line{1} == 'n' && $line{2} == 'u' && $line{3} == 'm') {
+            if (strlen($line) > 4 && $line[0] == 'e' && $line[1] == 'n' && $line[2] == 'u' && $line[3] == 'm') {
                 // Get Items
                 $j = $i;
                 $eArray = [];
-                while ($j < $count && $contentArray[$j]{0} != '}') {
+                while ($j < $count && $contentArray[$j][0] != '}') {
                     $ll = trim($contentArray[$j]);
                     if (strlen($ll) > 1 && strpos($ll, '=') !== false) {
                         $tp = explode('=', $ll);
@@ -773,9 +773,9 @@ EOL;
                 // Get enum desc
                 $j = $i;
                 $enumDesp = '';
-                while ($j >= 0 && $contentArray[$j]{0} != '}') {
+                while ($j >= 0 && $contentArray[$j][0] != '}') {
                     $ll = trim($contentArray[$j]);
-                    if (strlen($ll) > 2 && $ll{0} == '/' && $ll{1} == '/') {
+                    if (strlen($ll) > 2 && $ll[0] == '/' && $ll[1] == '/') {
                         $enumDesp = trim($ll, '/ ');
                         break;
                     }
