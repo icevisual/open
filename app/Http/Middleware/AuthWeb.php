@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Common\TOTPService;
 use Exception;
 use Closure;
 use App\Models\V1\Admin;
-use App\Services\TOTPService;
 use Illuminate\Http\Request;
 
 class AuthWeb
@@ -13,9 +13,10 @@ class AuthWeb
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      * @return mixed
+     * @throws Exception
      */
     public function handle($request, Closure $next)
     {
@@ -33,6 +34,9 @@ class AuthWeb
     /**
      * @apiVersion 1.0.0
      *
+     * @param Request $request
+     * @return array
+     * @throws Exception
      * @api Web 后台登录验证
      * @apiGroup Web Auth
      *
@@ -51,7 +55,6 @@ class AuthWeb
      *  Host: api.dafeng.renrenfenqi.com
      *
      *  X-Auth: 1/123456
-     *
      *
      */
     private function checkAuth(Request $request)

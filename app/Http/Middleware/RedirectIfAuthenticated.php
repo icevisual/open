@@ -17,8 +17,20 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
+//        if (Auth::guard($guard)->check()) {
+//            return redirect('/home');
+//        }
+//
+
         if (Auth::guard($guard)->check()) {
-            return redirect('/home');
+
+            $user = \Auth::getUser();
+
+            if($user->email_activation == \App\Models\User\Account::EMAIL_ACTIVATION_NO){
+                return redirect(route('register',['step' => 'step2']));
+            }
+
+            return redirect('/');
         }
 
         return $next($request);
