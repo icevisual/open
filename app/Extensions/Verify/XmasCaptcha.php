@@ -154,7 +154,8 @@ class XmasCaptcha
             $xOffset = 0;
             $yOffset = $this->fontSize + 2;
         }
-        imageTTFText($im, $this->fontSize, $angle, $xOffset, $yOffset, $foregroundColor, __DIR__ . '/fonts/1.ttf', $data);
+
+        \imagettftext($im, $this->fontSize, $angle, $xOffset, $yOffset, $foregroundColor, __DIR__ . '/fonts/1.ttf', $data);
         $counter = 4;
         // 生成随机颜色
         while ($counter > 0) {

@@ -79,7 +79,7 @@ class ServiceLog
     public static function requestLog(\Illuminate\Http\Request $request, $return,$httpStatus = 200)
     {
         $onlyArray = \Config::get('app.logRequestRange.only');
-        $uri = $request->route()->getUri();
+        $uri = $request->route()->uri();
         // Process Only Settings
         if(!self::hitPatterns($onlyArray,$uri)){
             return;

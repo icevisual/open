@@ -2,19 +2,18 @@
 namespace App\Http\Controllers\Open;
 
 use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use App\Http\Controllers\Controller;
 use App\Exceptions\ServiceException;
 use App\Models\User\Account;
 use App\Models\User\AccessKey;
 use App\Services\Sms\SmsServices;
-use App\Exceptions\App\Exceptions;
+use App\Exceptions;
 use App\Services\Open\OpenServices;
 
 class LoginController extends Controller
 {
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    use  ThrottlesLogins;
 
     /**
      * Where to redirect users after login / registration.
@@ -46,6 +45,11 @@ class LoginController extends Controller
             ]
         ]);
         $this->openServices = new OpenServices();
+    }
+
+    public function username()
+    {
+        return 'account';
     }
 
     public function loginUsername()
@@ -96,6 +100,7 @@ class LoginController extends Controller
 
     /**
      * 5.0登录
+     * @throws ServiceException
      */
     public function login(Request $request)
     {

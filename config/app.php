@@ -2,6 +2,45 @@
 
 return [
 
+
+    /**
+     * 是否返回HTTP 状态码
+     */
+    'useHttpStatus' => env('USE_HTTP_STATUS', true),
+
+    /**
+     * 是否记录请求日志
+     */
+    'logRequest' => env('LOG_REQUEST', true),
+
+    'logRequestDB' => [
+        'time_usage' => 0,
+        'memory_usage' => 0,
+    ],
+
+    'logRequestRange' => [
+        'only' => [
+            'api/*'
+        ],
+//         'except' => []
+    ],
+
+
+    /**
+     * SDK 文档 使用gitbook ，gitbook 的地址
+     */
+    'documentation_host' => env('DOCUMENTATION_HOST','http://121.41.103.183:8009/'),
+
+
+    /**
+     * VarDump => CliDumper 相关，解决GitBash 编码环境为GBK时的输出中文乱码问题
+     */
+    'cli-encoding' => env('CLI_ENCODING', 'UTF-8'),
+
+
+
+
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -65,7 +104,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'PRC',
 
     /*
     |--------------------------------------------------------------------------
@@ -78,7 +117,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'zh',
 
     /*
     |--------------------------------------------------------------------------
@@ -215,7 +254,7 @@ return [
         'Password' => Illuminate\Support\Facades\Password::class,
         'Queue' => Illuminate\Support\Facades\Queue::class,
         'Redirect' => Illuminate\Support\Facades\Redirect::class,
-        'Redis' => Illuminate\Support\Facades\Redis::class,
+        'LRedis' => Illuminate\Support\Facades\Redis::class,
         'Request' => Illuminate\Support\Facades\Request::class,
         'Response' => Illuminate\Support\Facades\Response::class,
         'Route' => Illuminate\Support\Facades\Route::class,
@@ -226,6 +265,14 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        'Input' => Illuminate\Support\Facades\Input::class,
+
+        'JsonReturn' => App\Extensions\Common\JsonReturn::class,
+        'HttpStatus' => App\Extensions\Common\HttpStatus::class,
+
+        'ErrorCode' => App\Extensions\Common\ErrorCode::class,
+
+        'Com' => App\Extensions\Common\Common::class,
     ],
 
 ];
