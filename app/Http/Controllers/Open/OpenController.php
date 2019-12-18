@@ -89,7 +89,7 @@ class OpenController extends Controller
             'backgroundColor' => "#FFFFFF"
         ];
         $captcha = new \App\Extensions\Verify\XmasCaptcha($config);
-        return $captcha->entry('register');
+        $captcha->entry('register');
     }
 
     /**

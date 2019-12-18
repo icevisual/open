@@ -212,6 +212,7 @@ class XmasCaptcha
     /**
      * 生成问题
      *
+     * @param string $id
      * @return void
      */
     public function entry($id = '')

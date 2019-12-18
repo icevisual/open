@@ -11,10 +11,11 @@ class ServiceLog
     /**
      * Log Update & Insert Sql Sentence
      *
-     * @param unknown $sql            
-     * @param unknown $bindings            
-     * @param unknown $time            
+     * @param string $sql
+     * @param array $bindings
+     * @param  $time
      * @return string
+     * @throws \Exception
      */
     public static function sqlLog($sql, $bindings, $time)
     {
@@ -39,9 +40,10 @@ class ServiceLog
     /**
      * Log an error request.
      *
-     * @param \Illuminate\Http\Request $request            
-     * @param array $return            
+     * @param \Illuminate\Http\Request $request
+     * @param array $return
      * @return mixed
+     * @throws \Exception
      */
     public static function errorLog(\Illuminate\Http\Request $request, $return)
     {
@@ -72,9 +74,10 @@ class ServiceLog
     /**
      * Log a request.
      *
-     * @param \Illuminate\Http\Request $request            
-     * @param array $return            
+     * @param \Illuminate\Http\Request $request
+     * @param array $return
      * @return mixed
+     * @throws \Exception
      */
     public static function requestLog(\Illuminate\Http\Request $request, $return,$httpStatus = 200)
     {
@@ -126,11 +129,12 @@ class ServiceLog
     }
 
     /**
-     * 
-     * @param string $name       The logging channel
-     * @param unknown $message
+     *
+     * @param string $name The logging channel
+     * @param string $message
      * @param array $context
      * @param string $dir
+     * @throws \Exception
      */
     public static function record($name, $message, array $context = [], $dir = "request")
     {
