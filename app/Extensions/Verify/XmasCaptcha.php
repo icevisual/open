@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Extensions\Verify;
 
 /**
@@ -88,7 +89,7 @@ class XmasCaptcha
 
     public function parseConfig($config)
     {
-        if (! empty($config)) {
+        if (!empty($config)) {
             foreach ($config as $k => $v) {
                 $this->$k = $v;
             }
@@ -98,7 +99,7 @@ class XmasCaptcha
     /**
      * 解析RGB颜色
      *
-     * @param string $color            
+     * @param string $color
      * @return array
      */
     private function parseRGB($color)
@@ -141,7 +142,7 @@ class XmasCaptcha
         $charWidth = ($this->fontSize + 2) * $this->charSize;
         if ($charWidth < $this->width) {
             // 文字的随机角度
-            $angle = rand(- 5, 5);
+            $angle = rand(-5, 5);
             $sin = sin(deg2rad($angle));
             // 计算偏移量避免字符超出图片
             $xOffset = floor($this->width - $charWidth * (1 + abs($sin)));
@@ -155,7 +156,10 @@ class XmasCaptcha
             $yOffset = $this->fontSize + 2;
         }
 
-        \imagettftext($im, $this->fontSize, $angle, $xOffset, $yOffset, $foregroundColor, __DIR__ . '/fonts/1.ttf', $data);
+
+        imagettftext($im, $this->fontSize, $angle, $xOffset, $yOffset, $foregroundColor, __DIR__ . '/fonts/1.ttf', $data);
+
+
         $counter = 4;
         // 生成随机颜色
         while ($counter > 0) {
@@ -164,7 +168,7 @@ class XmasCaptcha
             $bColor = rand(0, 255);
             $bColor = 0;
             $sixColors[] = imageColorAllocate($im, $rColor, $gColor, $bColor);
-            $counter --;
+            $counter--;
         }
         while ($counter < 4) {
             $rArc = rand(2, 4);
@@ -180,17 +184,18 @@ class XmasCaptcha
                 $lineYEnd = rand(10, $height);
                 imageline($im, $lineXStart, $lineYStart, $lineXEnd, $lineYEnd, $sixColors[$counter % 8]);
             }
-            $counter ++;
+            $counter++;
         }
         header('Content-type: image/png');
         imagePng($im);
+
         imageDestroy($im);
     }
 
     /**
      * 保存数据
      *
-     * @param string $data            
+     * @param string $data
      * @return void
      */
     private function save($data, $id)
@@ -214,30 +219,30 @@ class XmasCaptcha
         $data = array_merge(range(1, 9), range('A', 'Z'), range('a', 'z'));
         $data = array_rand(array_flip($data), $this->charSize);
         $data = implode('', $data);
-        
-        if(\App::environment('local','testing')){
-            \Com::debug('captche',[$data,\Session::getId()]);
+
+        if (\App::environment('local', 'testing')) {
+            \Com::debug('captche', [$data, \Session::getId()]);
             $open = new \App\Services\Open\OpenServices();
             \LRedis::SETEX($open->getCacheKey(\Session::getId(), \App\Services\Open\OpenServices::KEY_REGISTER_CAPTACH), 120, $data);
         }
-        
+
         $this->save(strtoupper($data), $id);
         $this->generateImage($data);
     }
-    
-    
-    
-    public static function checkCaptcha($code, $id = ''){
+
+
+    public static function checkCaptcha($code, $id = '')
+    {
         static $_instance = null;
-        if(!$_instance){
+        if (!$_instance) {
             $_instance = new static;
         }
-        return $_instance->check($code,$id);
+        return $_instance->check($code, $id);
     }
 
     /**
      * 验证验证码是否正确
-     * 
+     *
      * @access public
      * @param string $code
      *            用户验证码
@@ -258,7 +263,7 @@ class XmasCaptcha
             $this->session($key, null);
             return false;
         }
-        
+
         if ($this->authcode(strtoupper($code)) == $secode['verify_code']) {
             $this->session($key, null);
             return true;

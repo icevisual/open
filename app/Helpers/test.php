@@ -1,40 +1,27 @@
 <?php
-$message = 'hello';
 
-// 没有 "use"
-$example = function () {
-    var_dump($message);
-};
-echo $example();
 
-// 继承 $message
-$example = function () use ($message) {
-    var_dump($message);
-};
-echo $example();
 
-// Inherited variable's value is from when the function
-// is defined, not when called
-$message = 'world';
-echo $example();
+// Create the image
+$im = imagecreatetruecolor(400, 30);
 
-// Reset message
-$message = 'hello';
+// Create some colors
+$white = imagecolorallocate($im, 255, 255, 255);
+$grey = imagecolorallocate($im, 128, 128, 128);
+$black = imagecolorallocate($im, 0, 0, 0);
+imagefilledrectangle($im, 0, 0, 399, 29, $white);
 
-// Inherit by-reference
-$example = function () use (&$message) {
-    var_dump($message);
-};
-echo $example();
+// The text to draw
+$text = 'Testing...';
+// Replace path by your own font path
+$font = '/home/icevisual/Projects/PHP7/smell_open/app/Extensions/Verify/fonts/1.ttf';
 
-// The changed value in the parent scope
-// is reflected inside the function call
-$message = 'world';
-echo $example();
+// Add some shadow to the text
+imagettftext($im, 20, 0, 11, 21, $grey, $font, $text);
 
-// Closures can also accept regular arguments
-$example = function ($arg) use ($message) {
-    var_dump($arg . ' ' . $message);
-};
-$example("hello");
+// Add the text
+imagettftext($im, 20, 0, 10, 20, $black, $font, $text);
 
+// Using imagepng() results in clearer text compared with imagejpeg()
+imagepng($im,"fff.png");
+imagedestroy($im);
