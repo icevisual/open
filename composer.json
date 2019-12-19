@@ -15,7 +15,8 @@
         "sskaje/mqtt": "dev-v2.0-dev",
         "ext-json": "*",
         "ext-curl": "*",
-      "ext-gd": "*"
+      "ext-gd": "*",
+      "ext-simplexml": "*"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.6",

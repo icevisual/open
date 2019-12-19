@@ -9,14 +9,14 @@ class AccessKey extends BaseModel
     /**
      * 使用状态，正在使用
      * 
-     * @var unknown
+     * @var int
      */
     const STATUS_USING = 1;
 
     /**
      * 使用状态，停止使用
      * 
-     * @var unknown
+     * @var int
      */
     const STATUS_DISABLE = 2;
     
@@ -38,8 +38,13 @@ CREATE TABLE `op_developer_access_key` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='开发者accessKey'
         ";
-    
-    
+
+    /**
+     * @param $uid
+     * @param $accessKey
+     * @return mixed
+     * @throws ServiceException
+     */
     public static function showSecretKey($uid,$accessKey){
         $info = self::select([
             'secret',
@@ -53,7 +58,10 @@ CREATE TABLE `op_developer_access_key` (
     }
     
     public static function listAccessKeyPair($uid){
-        $list = self::select([
+        //         foreach ($list as $k => $v){
+//             $list[$k]['secret'] = '******************************';
+//         }
+        return self::select([
             'access',
             'secret',
             'status',
@@ -62,10 +70,6 @@ CREATE TABLE `op_developer_access_key` (
         ->orderBy('created_at','asc')
         ->get()
         ->toArray();
-//         foreach ($list as $k => $v){
-//             $list[$k]['secret'] = '******************************';
-//         }
-        return $list;
     }
     
     public static function createNewAccessKeyIfNotExists($uid){
@@ -78,7 +82,13 @@ CREATE TABLE `op_developer_access_key` (
     public static function canCreateAccess($uid){
         return self::where('account_id',$uid)->count() < 2;
     }
-    
+
+    /**
+     * @param $uid
+     * @param $accessKey
+     * @return mixed
+     * @throws ServiceException
+     */
     public static function deleteAccess($uid,$accessKey){
         $query = self::where('account_id',$uid)->where('access',$accessKey);
         $info = $query->first();
@@ -90,7 +100,13 @@ CREATE TABLE `op_developer_access_key` (
         }
         return $query->delete();
     }
-    
+
+    /**
+     * @param $uid
+     * @param $accessKey
+     * @return int
+     * @throws ServiceException
+     */
     public static function disableAccessKey($uid,$accessKey){
         $query = self::where('account_id',$uid)->where('access',$accessKey);
         $info = $query->first();
@@ -108,7 +124,13 @@ CREATE TABLE `op_developer_access_key` (
             'status' => self::STATUS_DISABLE
         ]);
     }
-    
+
+    /**
+     * @param $uid
+     * @param $accessKey
+     * @return int
+     * @throws ServiceException
+     */
     public static function enableAccessKey($uid,$accessKey){
         $query = self::where('account_id',$uid)->where('access',$accessKey);
         $info = $query->first();
@@ -133,11 +155,11 @@ CREATE TABLE `op_developer_access_key` (
         ];
         return self::create($data);
     }
-    
+
     /**
-     * 
-     * @param unknown $accessKey
-     * @return ['account_id','secret']
+     *
+     * @param string $accessKey
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null ['account_id','secret']
      */
     public static function getDeveloperIDByAccessKey($accessKey){
         return self::where('access',$accessKey)->first(['account_id','secret']);

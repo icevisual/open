@@ -100,6 +100,8 @@ class LoginController extends Controller
 
     /**
      * 5.0登录
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      * @throws ServiceException
      */
     public function login(Request $request)
@@ -182,6 +184,7 @@ class LoginController extends Controller
 
     /**
      * 8.0修改密码
+     * @throws ServiceException
      */
     public function resetPassword()
     {
@@ -222,7 +225,7 @@ class LoginController extends Controller
         if (\Auth::attempt([
             'account' => $user->account,
             'password' => $data['oldpasswd']
-        ], false, false)) {
+        ], false)) {
             
             Account::where('id', $user->id)->update([
                 'password' => \Hash::make($data['password'])
@@ -249,10 +252,11 @@ class LoginController extends Controller
         return $this->__json([
             'isLogin' => $isLogin ? 0 : 1
         ]);
-    }   
-    
+    }
+
     /**
      * 3.0申请成为开发者
+     * @throws ServiceException
      */
     public function applyDeveloper()
     {
@@ -322,7 +326,7 @@ class LoginController extends Controller
         }
         return $this->__json(\ErrorCode::VALIDATION_FAILED, '手机验证码错误');
     }
-    
+
     /**
      * 3.2发送激活短信
      * @apiSuccess {Integer} interval 下次发送剩余时间（秒）
@@ -330,6 +334,7 @@ class LoginController extends Controller
      *
      * @apiError {Integer} restTime 发送间隔剩余时间（秒）
      * @apiError {Integer} seconds 禁止发送剩余时间（秒）
+     * @throws ServiceException
      */
     public function sendRegisterSms()
     {

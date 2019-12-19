@@ -28,7 +28,7 @@ class SmsServices
     
     /**
      * 发送请求
-     * @param unknown $params
+     * @param array $params
      * @param number $timeout
      * @return boolean
      */
@@ -44,16 +44,17 @@ class SmsServices
         }
         return false;
     }
-    
-    
+
+
     /**
      * 发送阿里大于短信
-     * @param unknown $phone 
-     * @param unknown $param
+     * @param string $phone
+     * @param array $param
      * $param = [
-            'code' => '',
-            'n' => '',
-        ];
+     * 'code' => '',
+     * 'n' => '',
+     * ];
+     * @return mixed|\ResultSet|\SimpleXMLElement
      */
     public static function sendBigFish($phone,$param)
     {
@@ -77,10 +78,10 @@ class SmsServices
     
     /**
      * curl
-     * @param unknown $url
-     * @param unknown $data
+     * @param string $url
+     * @param array $data
      * @param string $json_decode
-     * @return Ambigous <mixed, unknown>
+     * @return array
      */
     public static function curl_post($url, $data, $json_decode = true) {
         $ch = curl_init ();
