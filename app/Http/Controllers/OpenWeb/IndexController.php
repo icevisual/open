@@ -42,7 +42,7 @@ class IndexController extends Controller
     }
     
     public function developer(){
-        \Log::info("\Auth::guest()  = ".\Auth::guest() );
+        dg("\Auth::guest()  = ".\Auth::guest() );
         return view('open.index.developer')->with([
             'isLogin' => \Auth::guest() ? 0 : 1
         ]);
@@ -93,7 +93,7 @@ class IndexController extends Controller
             'documentation_host' => \Config::get('app.documentation_host'),
         ]);
     }
-    
+
     public function forget(){
         return view('open.index.forget');
     }

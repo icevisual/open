@@ -1,5 +1,26 @@
 <?php
 
+
+if (!function_exists('dg')) {
+
+    function dg($message, $context = [])
+    {
+        static $seq = 0;
+        if ($seq == 0)
+            $seq = random_int(1,1000);
+        $trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 5);
+        $line = $trace[0]['line'];
+        $trace = $trace[1];
+
+        $class = isset($trace['class']) ? $trace['class'] : "";
+        $function = isset($trace['class']) ? $trace['function'] : "";
+        $prefix = $class . "::" . $function;
+        $prefix = trim($prefix, ':');
+        \Log::debug("[{$seq}]{$prefix}[{$line}] " . $message, $context);
+    }
+}
+
+
 if (!function_exists('reverseScandir')) {
 
     function reverseScandir($basePath, $prefix = '', $opts = [])

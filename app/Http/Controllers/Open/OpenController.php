@@ -438,9 +438,10 @@ class OpenController extends Controller
         
         return $this->__json($list);
     }
-    
+
     /**
      * 99.1审核开发者申请
+     * @throws ServiceException
      */
     public function developerApplyReview(){
         $data['apply_id'] =  \Input::get('apply_id');//申请ID

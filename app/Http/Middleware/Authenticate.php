@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use function Psy\debug;
 
 class Authenticate
 {
@@ -17,12 +18,14 @@ class Authenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        \Log::debug(\Auth::user());
+
+        dg("\Auth::user()");
+        dg(\Auth::user());
         if (Auth::guard($guard)->guest()) {
             if ($request->ajax() || $request->wantsJson()) {
                 return \JsonReturn::json('请先登录',\ErrorCode::UNAUTHORIZED);
             } else {
-                \Log::info("=> developer");
+                dg("To developer");
                 return redirect()->guest(route('developer'));
             }
         }
