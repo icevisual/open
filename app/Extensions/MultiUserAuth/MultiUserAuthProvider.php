@@ -60,7 +60,7 @@ class MultiUserAuthProvider implements UserProvider
      *
      * @param  mixed  $identifier
      * @param  string  $token
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
      */
     public function retrieveByToken($identifier, $token)
     {
@@ -164,6 +164,7 @@ class MultiUserAuthProvider implements UserProvider
     /**
      * Gets the name of the Eloquent user model.
      * 通过下标获取对应Model
+     * @param int $i
      * @return string
      */
     public function getModel($i = 0)

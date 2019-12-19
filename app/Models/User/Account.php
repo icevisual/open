@@ -19,70 +19,70 @@ class Account extends BaseModel implements AuthenticatableContract, Authorizable
     /**
      * 账户状态，正常
      * 
-     * @var unknown
+     * @var int
      */
     const STATUS_OK = 1;
 
     /**
      * 账户状态，冻结
      * 
-     * @var unknown
+     * @var int
      */
     const STATUS_FROZEN = 2;
 
     /**
      * 邮箱验证状态，未
      * 
-     * @var unknown
+     * @var int
      */
     const EMAIL_ACTIVATION_NO = 1;
 
     /**
      * 邮箱验证状态，已
      * 
-     * @var unknown
+     * @var int
      */
     const EMAIL_ACTIVATION_YES = 2;
 
     /**
      * 手机验证状态，未
      * 
-     * @var unknown
+     * @var int
      */
     const PHONE_ACTIVATION_NO = 1;
 
     /**
      * 手机验证状态，已
      * 
-     * @var unknown
+     * @var int
      */
     const PHONE_ACTIVATION_YES = 2;
     
     /**
      * 开发者申请状态，未申请
      *
-     * @var unknown
+     * @var int
      */
     const APPLY_STATUS_NO = 1;
     
     /**
      * 开发者申请状态，已申请
      *
-     * @var unknown
+     * @var int
      */
     const APPLY_STATUS_APPLYING = 2;
     
     /**
      * 开发者申请状态，已通过
      *
-     * @var unknown
+     * @var int
      */
     const APPLY_STATUS_PASS = 3;
     
     /**
      * 开发者申请状态，未通过
      *
-     * @var unknown
+     * @var int
      */
     const APPLY_STATUS_FAIL = 4;
     
@@ -95,10 +95,10 @@ class Account extends BaseModel implements AuthenticatableContract, Authorizable
 
     /**
      * 用户是否在注册的第一二步之间
-     * 
-     * @param unknown $uid            
+     *
+     * @param int $uid
+     * @return Account|Account[]|\Illuminate\Database\Eloquent\Collection|Model|null
      * @throws ServiceException
-     * @return Ambigous <\Illuminate\Database\Eloquent\Model, \Illuminate\Database\Eloquent\Collection, multitype:static , static, NULL>
      */
     public static function betweenFirstSecond($uid)
     {
@@ -118,7 +118,12 @@ class Account extends BaseModel implements AuthenticatableContract, Authorizable
         }
         return $info;
     }
-    
+
+    /**
+     * @param $uid
+     * @return Account|Account[]|\Illuminate\Database\Eloquent\Collection|Model|null
+     * @throws ServiceException
+     */
     public static function betweenSecondThird($uid)
     {
         $info = Account::find($uid, [
@@ -184,8 +189,9 @@ class Account extends BaseModel implements AuthenticatableContract, Authorizable
 
     /**
      * 验证邮箱是否可以用于找回密码
-     * 
-     * @param unknown $email            
+     *
+     * @param string $email
+     * @return mixed
      * @throws ServiceException
      */
     public static function validForgetEmail($email)
