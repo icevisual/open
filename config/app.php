@@ -29,7 +29,7 @@ return [
     /**
      * SDK 文档 使用gitbook ，gitbook 的地址
      */
-    'documentation_host' => env('DOCUMENTATION_HOST','http://121.41.103.183:8009/'),
+    'documentation_host' => env('DOCUMENTATION_HOST','http://doc.open.com'),
 
 
     /**

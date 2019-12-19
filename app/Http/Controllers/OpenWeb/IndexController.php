@@ -42,7 +42,6 @@ class IndexController extends Controller
     }
     
     public function developer(){
-        dg("\Auth::guest()  = ".\Auth::guest() );
         return view('open.index.developer')->with([
             'isLogin' => \Auth::guest() ? 0 : 1
         ]);
