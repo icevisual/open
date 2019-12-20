@@ -1,5 +1,16 @@
 <?php
 
+//use App\Contracts\UserContract;
+//
+//class User2Provider implements UserContract
+//{
+//
+//    public function GetUserById(int $id)
+//    {
+//        // TODO: Implement GetUserById() method.
+//        return "[User={$id}]";
+//    }
+//}
 
 if (!function_exists('dg')) {
 

@@ -106,15 +106,15 @@ class ServiceLog
             return is_string($v) ? (strlen($v) > 100 ? '...' : $v) : $v;
         }, $params);
         
-        
+
         $sha1 = \App\Models\Common\RequestLog::calculateSha1($data['uri'],$params,$data['return']);
-        
+
         $requestLogData = [
             'ip' => $data['ips'][0],
             'uri' => $data['uri'],
             'params' => json_encode($params),
             'http_status' => $httpStatus,
-            'return' => json_encode($data['return']),
+            'return' => substr(json_encode($data['return']),0,100),
             'sha1' => $sha1,
             'time_usage' => isset($data['mt']['t']) ? $data['mt']['t'] : 0,
             'memory_usage' => isset($data['mt']['m']) ? $data['mt']['m'] : 0,
