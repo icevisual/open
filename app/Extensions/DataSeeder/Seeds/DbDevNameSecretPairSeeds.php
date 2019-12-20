@@ -60,6 +60,6 @@ class DbDevNameSecretPairSeeds implements SeedsFactory
         return array_shift($_cache);
     }
 
-    public function destoryAllSeed(array $seeds)
+    public function destroyAllSeed(array $seeds)
     {}
 }

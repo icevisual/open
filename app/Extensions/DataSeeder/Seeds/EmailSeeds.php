@@ -29,7 +29,7 @@ class EmailSeeds implements SeedsFactory
         return sprintf('%s@%s.%s', $seg[0], $seg[1], $seg[2]);
     }
 
-    public function destoryAllSeed(array $seeds)
+    public function destroyAllSeed(array $seeds)
     {
         \App\Models\User\Account::whereIn('email', array_keys($seeds))->delete();
     }

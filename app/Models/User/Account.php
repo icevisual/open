@@ -94,6 +94,16 @@ class Account extends BaseModel implements AuthenticatableContract, Authorizable
     public $guarded = [];
 
     /**
+     * 为路由模型获取键名。
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'phone';
+    }
+
+    /**
      * 用户是否在注册的第一二步之间
      *
      * @param int $uid

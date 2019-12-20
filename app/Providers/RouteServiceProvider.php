@@ -26,6 +26,10 @@ class RouteServiceProvider extends ServiceProvider
         //
 
         parent::boot();
+
+
+        // Route::pattern('num', '[0-9]+');
+
     }
 
     /**

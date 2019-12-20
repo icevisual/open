@@ -32,6 +32,6 @@ class PhoneSeeds implements SeedsFactory
         return $this->randomPhone();
     }
 
-    public function destoryAllSeed(array $seeds)
+    public function destroyAllSeed(array $seeds)
     {}
 }

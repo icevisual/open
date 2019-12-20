@@ -14,6 +14,20 @@
 //Route::get('/', function () {
 //    return view('welcome');
 //});
+Route::get('user/{name}', function ($name) {
+    dump($name);
+})->where('name', '[A-Za-z]+');
+
+Route::get('user/{num}', function ($num) {
+    dump(">>>".$num." ");
+});
+//
+//Route::get('user/{name}', function ($name) {
+//    dump(">>>fff ".$name." ");
+//});
+Route::get('users/{user}', function (App\Models\User\Account $user) {
+    return $user->email;
+});
 
 
 Route::group([

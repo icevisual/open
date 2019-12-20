@@ -97,7 +97,7 @@ class TruenameSeeds implements SeedsFactory
         return $this->randomChineseName();
     }
 
-    public function destoryAllSeed(array $seeds)
+    public function destroyAllSeed(array $seeds)
     {
         
     }

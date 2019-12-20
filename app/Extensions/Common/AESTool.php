@@ -11,7 +11,7 @@ class AESTool{
 
     /**
      * 设置默认的加密key
-     * @var str
+     * @var string
      */
     public static $defaultKey = 'e10adc3949ba59abbe56e057f20f883e';
 
@@ -19,19 +19,19 @@ class AESTool{
 
     /**
      * 设置默认加密向量
-     * @var str
+     * @var string
      */
     private $iv = 'e10adc3949ba59a1';
 
     /**
      * 设置加密算法
-     * @var str
+     * @var string
      */
     private $cipher;
 
     /**
      * 设置加密模式
-     * @var str
+     * @var string
      */
     private $mode;
 
@@ -51,8 +51,8 @@ class AESTool{
 
     /**
      * 对内容加密，注意此加密方法中先对内容使用padding pkcs7，然后再加密。
-     * @param str $content    需要加密的内容
-     * @return str 加密后的密文
+     * @param string $content    需要加密的内容
+     * @return string 加密后的密文
      */
     public function encrypt($content){
         if(empty($content)){
@@ -68,8 +68,9 @@ class AESTool{
 
     /**
      * 对内容解密，注意此加密方法中先对内容解密。再对解密的内容使用padding pkcs7去除特殊字符。
-     * @param String $content    需要解密的内容
+     * @param String $content 需要解密的内容
      * @return String 解密后的内容
+     * @throws \Exception
      */
     public function decrypt($content){
         if(empty($content)){
@@ -78,7 +79,7 @@ class AESTool{
         $content = base64_decode($content);
         if($content === false) {
             return false;
-            throw new \Exception('Failed To Decode Received Data Using base64_decode');
+            // throw new \Exception('Failed To Decode Received Data Using base64_decode');
         }
         $content = mcrypt_decrypt($this->cipher, $this->getSecretKey(), $content, $this->mode, $this->iv);
         $block = mcrypt_get_block_size($this->cipher, $this->mode);
