@@ -41,7 +41,7 @@ class IndexController extends Controller
         return view('open.index.device');
     }
     
-    public function developer(){
+    public function developer(\Request $request){
         return view('open.index.developer')->with([
             'isLogin' => \Auth::guest() ? 0 : 1
         ]);

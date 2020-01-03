@@ -18,7 +18,8 @@
         "laravel/tinker": "~1.0",
         "paragonie/random_compat": "2.0.18",
         "predis/predis": "^1.1",
-        "sskaje/mqtt": "dev-v2.0-dev"
+        "sskaje/mqtt": "dev-v2.0-dev",
+      "ext-mysqli": "*"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.6",

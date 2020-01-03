@@ -413,8 +413,9 @@ if (!function_exists('runCustomValidator')) {
      *            ],</div>
      *            ]
      *            </pre>
-     * @return multitype:|boolean
+     * @return string:|boolean
      * @throws \App\Exceptions\ServiceException
+     * @throws \App\Exceptions\ValidationException
      */
     function runCustomValidator(array $input)
     {
@@ -454,8 +455,7 @@ if (!function_exists('runCustomValidator')) {
                 'key' => ':key',
                 'message' => ':message'
             ]);
-            $errorMsg = $config['FirstOrAll'] ? $message->all() : $message->first();
-
+            $errorMsg = $config['FirstOrAll'] ? $message->all() : $message->get($message->first());
             if ($config['ReturnOrException']) {
                 if ($config['FirstOrAll']) {
                     $errors = [];
@@ -464,7 +464,7 @@ if (!function_exists('runCustomValidator')) {
                     }
                     throw new \App\Exceptions\ValidationException('error', \ErrorCode::VALIDATION_FAILED, $errors);
                 } else {
-                    throw new \App\Exceptions\ValidationException($errorMsg['message'], \ErrorCode::VALIDATION_FAILED);
+                    throw new \App\Exceptions\ValidationException($errorMsg[0]['message'], \ErrorCode::VALIDATION_FAILED);
                 }
             } else {
                 return $errorMsg;

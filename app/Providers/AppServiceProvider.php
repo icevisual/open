@@ -9,12 +9,7 @@ use App\Contracts\UserContract;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
+    public function testResolv()
     {
         //  dg("UserProvider exists = ".class_exists(\App\Contracts\UserProvider::class));
         //  only this line ,Reflection Error dg("MultiUserProvider exists = ".class_exists(\App\Contracts\MultiUserProvider::class));
@@ -75,6 +70,16 @@ class AppServiceProvider extends ServiceProvider
 
         //dg("User2Provider exists = ".class_exists(\User2Provider::class));
 
+
+    }
+
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
 
 
 

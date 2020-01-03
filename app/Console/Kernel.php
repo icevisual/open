@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Extensions\Common\Common;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -21,7 +22,11 @@ class Kernel extends ConsoleKernel
         Commands\Emqtt::class,
         Commands\Tools::class,
         Commands\Upgrade::class,
-        Commands\TopicLogger::class
+        Commands\TopicLogger::class,
+        Commands\SendEmailCmd::class,
+        Commands\SendAnotherEmailCmd::class,
+        Commands\MakeTestTableCmd::class,
+        Commands\TestTableSingle::class,
     ];
 
     /**
