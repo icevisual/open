@@ -38,6 +38,12 @@ class MakeTestTableCmd extends Command
      */
     public function handle()
     {
+
+        $a = time() - strtotime('2014-09-18');
+        edump($a/86400/30/12);
+        $b = strtotime('2017-11-11');
+
+
         file_put_contents(storage_path("logs/laravel.log"),"");
         \Schema::dropIfExists('test_cur');
         \Schema::create('test_cur', function (Blueprint $table) {
@@ -45,6 +51,8 @@ class MakeTestTableCmd extends Command
             $table->string('name');
             $table->timestamps();
         });
+
+        \LRedis::DEL("LastID");
 
         $r = `ab -n 100 -c 100 http://smell.open.com/api/t1?name=1`;
         echo $r;

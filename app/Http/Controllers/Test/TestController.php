@@ -29,7 +29,7 @@ class TestController extends Controller
         $t = new Test();
         $obj = $t->CreateNew($data['name']);
         if(!$obj)
-            return $this->__json(400,[$obj['id']]);
-        return $this->__json([$obj['id']]);
+            return $this->__json(400);
+        return $this->__json();
     }
 }

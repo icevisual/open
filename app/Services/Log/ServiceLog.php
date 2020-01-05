@@ -19,20 +19,25 @@ class ServiceLog
      */
     public static function sqlLog($sql, $bindings, $time)
     {
+        static $RequestID = 0;
+        if($RequestID == 0)
+            $RequestID = random_int(1,1000);
         $i = 0;
         $bindings && $sql = preg_replace_callback('/\?/', function ($matchs) use(&$i, $bindings) {
             return '\'' . $bindings[$i ++] . '\'';
         }, $sql);
+
+        $prefix = '['.$RequestID.'] ';
         if (strpos($sql, 'update') === 0) {
-            self::record('sql', $sql, [], 'sqlLog');
+            self::record('sql', $prefix.$sql, [], 'sqlLog');
         }
-        
+
         if (\App::environment('local','testing')) {
             if (strpos($sql, 'insert') === 0) {
-                self::record('sql', $sql, [], 'sqlLog');
+                self::record('sql', $prefix.$sql, [], 'sqlLog');
             }
             if (strpos($sql, 'select') === 0) {
-                self::record('sql', $sql, [], 'sqlLog');
+                self::record('sql', $prefix.$sql, [], 'sqlLog');
             }
         }
     }
@@ -56,8 +61,8 @@ class ServiceLog
         );
         self::record('exception', 'RQS', $data, 'request');
     }
-    
-    
+
+
     public static function hitPatterns($patterns,$path)
     {
         foreach ($patterns as $pattern) {
@@ -81,15 +86,18 @@ class ServiceLog
      */
     public static function requestLog(\Illuminate\Http\Request $request, $return,$httpStatus = 200)
     {
+        static $RequestID = 0;
+        if($RequestID == 0)
+            $RequestID = random_int(1,1000);
         $onlyArray = \Config::get('app.logRequestRange.only');
         $uri = $request->route()->uri();
         // Process Only Settings
         if(!self::hitPatterns($onlyArray,$uri)){
             return;
         }
-        
+
         $ret = is_array($return) ? $return : json_decode($return, 1);
-        
+
         $data = array(
             'mt' => mt_mark('request-mt-start', 'request-mt-end', 'MB', 4),
             'refer' => $request->header('http-refer'),
@@ -101,11 +109,11 @@ class ServiceLog
         );
         mt_mark('[clear]');
         $params = $data['original'];
-        
+
         $params = array_map(function ($v) {
             return is_string($v) ? (strlen($v) > 100 ? '...' : $v) : $v;
         }, $params);
-        
+
 
         $sha1 = \App\Models\Common\RequestLog::calculateSha1($data['uri'],$params,$data['return']);
 
@@ -122,10 +130,10 @@ class ServiceLog
         ];
         $logCondition = \Config::get('app.logRequestDB');
         if ($requestLogData['time_usage'] >= $logCondition['time_usage']
-             || $requestLogData['memory_usage'] >= $logCondition['memory_usage']) {
+            || $requestLogData['memory_usage'] >= $logCondition['memory_usage']) {
             \App\Models\Common\RequestLog::addRecord($requestLogData);
         }
-        self::record('request', 'RQS', $data, 'request');
+        self::record('request', '['.$RequestID.'] RQS', $data, 'request');
     }
 
     /**
@@ -139,17 +147,17 @@ class ServiceLog
     public static function record($name, $message, array $context = [], $dir = "request")
     {
         $filePath = storage_path() . "/{$dir}/" . $name;
-        
+
         $log = new Logger($name);
-        
+
         $logFileName = $filePath . '.' . date('Y-m-d');
-        
+
         $log->pushHandler(new StreamHandler($logFileName, Logger::INFO));
-        
+
         $log->addInfo($message, $context);
 
         @chown($logFileName, 'www:www');
         @chmod($logFileName, 0777);
-	}
-    
+    }
+
 }
