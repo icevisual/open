@@ -53,8 +53,13 @@ class MakeTestTableCmd extends Command
             $table->increments('id');
             $table->string('name');
             $table->integer('account')->default(0);
+            $table->double('tm')->default(0.0);
             $table->timestamps();
         });
+        //
+
+        \DB::statement('alter table op_test_cur modify updated_at timestamp default null on update CURRENT_TIMESTAMP;');
+
         $this->info("Clear Redis");
 
         \DB::insert("insert into op_test_cur (`id`,`name`,`created_at`)values(?,?,?)",[
@@ -68,7 +73,11 @@ class MakeTestTableCmd extends Command
         $c = $this->argument('c');
 
         $r = `ab -n $n -c $c http://smell.open.com/api/t1?name=1`;
-        echo $r;
+        $arr = explode("\n",$r);
+        $arr = array_slice($arr,14);
+        $this->info("Summary");
+        foreach ($arr as $v)
+            echo $v.PHP_EOL;
 
         $this->info("Static Data");
         $table_data = \DB::table("test_cur")->select (\DB::raw("min(id),max(id),count(*)"))->get();

@@ -110,6 +110,7 @@ class Test extends Model
         $newID = $this->cacheLastID();
         $r = self::create([
             'id' => $newID,
+            'tm' => microtime(true),
             'name' => $name,
             'created_at' => now()
         ]);
@@ -123,6 +124,7 @@ class Test extends Model
         // 140 concur
         $r = self::create([
             'name' => $name,
+            'tm' => microtime(true),
             'created_at' => now()
         ]);
         return $r;

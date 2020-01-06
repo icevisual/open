@@ -15,7 +15,7 @@ class Locker implements ILock
     /**
      * @var int
      */
-    public $_waitLockIntervalMicroSeconds = 20000;
+    public $_waitLockIntervalMicroSeconds = 10000;
 
     /**
      * @var int
