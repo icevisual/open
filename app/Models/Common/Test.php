@@ -2,6 +2,9 @@
 
 namespace App\Models\Common;
 
+use App\Extensions\Lock\Locker;
+use App\Extensions\Lock\FileLock;
+use App\Extensions\Lock\RedisLock;
 use Illuminate\Database\Eloquent\Model;
 
 class Test extends Model
@@ -26,7 +29,7 @@ class Test extends Model
         return false;
     }
 
-    public function WithLock(callable $func)
+    public function WithLock0(callable $func)
     {
         $r = true;
         try {
@@ -45,6 +48,12 @@ class Test extends Model
         return $r;
     }
 
+    public function WithLock(callable $func)
+    {
+        return (new Locker(new FileLock()))->WithLock("prefix--key--lock",$func);
+    }
+
+
     public function cacheLastID()
     {
         $newID = 0;
@@ -55,7 +64,7 @@ class Test extends Model
                 $last_id = \LRedis::GET("LastID");
                 if($last_id)
                 {
-                    $newID = $last_id;
+                    $newID = intval(\LRedis::INCR("LastID"));
                     return;
                 }
                 \Log::info("<=LastID=>");
@@ -78,9 +87,7 @@ class Test extends Model
         else
         {
             $newID = intval(\LRedis::INCR("LastID"));
-
         }
-
         return $newID;
     }
 
@@ -131,6 +138,20 @@ class Test extends Model
     }
 
 
+
+    public function CreateNew3($name)
+    {
+        $newID = $this->cacheLastID();
+        $r = self::create([
+            'id' => $newID,
+            'name' => $name,
+            'created_at' => now()
+        ]);
+        return $r;
+    }
+
+
+
     public function CreateNew0($name)
     {
         // 140 concur
@@ -145,7 +166,9 @@ class Test extends Model
 
     public function CreateNew($name)
     {
-        \Log::info("LastID=" . $this->cacheLastID());
+        return $this->CreateNew3($name);
+        //\Log::info("LastID=" . $this->cacheLastID());
+        \Log::info("LastID=" . \LRedis::INCR("KKKKKK"));
         return;
         return $this->CreateNew0($name);
 //        \DB::update("SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;");

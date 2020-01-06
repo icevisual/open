@@ -12,7 +12,7 @@ class MakeTestTableCmd extends Command
      *
      * @var string
      */
-    protected $signature = 'test:db';
+    protected $signature = 'test:db {n=10000} {c=100}';
 
     /**
      * The console command description.
@@ -38,25 +38,39 @@ class MakeTestTableCmd extends Command
      */
     public function handle()
     {
-
-        $a = time() - strtotime('2014-09-18');
-        edump($a/86400/30/12);
-        $b = strtotime('2017-11-11');
-
+//
+       // edump(date("Y-m-d H:m:s"));
+//        $a = time() - strtotime('2014-09-18');
+//        edump($a/86400/30/12);
+//        $b = strtotime('2017-11-11');
+        $this->info("Clear `logs/laravel.log`",1);
 
         file_put_contents(storage_path("logs/laravel.log"),"");
+
+        $this->info("Recreate Table `test_cur`");
         \Schema::dropIfExists('test_cur');
         \Schema::create('test_cur', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->integer('account')->default(0);
             $table->timestamps();
         });
+        $this->info("Clear Redis");
+
+        \DB::insert("insert into op_test_cur (`id`,`name`,`created_at`)values(?,?,?)",[
+             100,"name", date("Y-m-d H:m:s")
+        ]);
 
         \LRedis::DEL("LastID");
+        $this->info("Run ab");
 
-        $r = `ab -n 100 -c 100 http://smell.open.com/api/t1?name=1`;
+        $n = $this->argument('n');
+        $c = $this->argument('c');
+
+        $r = `ab -n $n -c $c http://smell.open.com/api/t1?name=1`;
         echo $r;
 
+        $this->info("Static Data");
         $table_data = \DB::table("test_cur")->select (\DB::raw("min(id),max(id),count(*)"))->get();
         dump($table_data->toArray());
         return;
