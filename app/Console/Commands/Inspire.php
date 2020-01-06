@@ -29,6 +29,14 @@ class Inspire extends Command
      */
     public function handle()
     {
+        dump(resolve(\App\Extensions\Lock\Locker::class));
+
+//
+//        $result = \DB::select("SELECT GET_LOCK('key',10) AS MyLOCK ");
+//
+//        dump($result[0]->MyLOCK);
+
+        exit;
         
         $opts = [
             CURLOPT_HTTPHEADER => [

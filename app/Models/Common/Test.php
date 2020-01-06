@@ -4,6 +4,7 @@ namespace App\Models\Common;
 
 use App\Extensions\Lock\Locker;
 use App\Extensions\Lock\FileLock;
+use App\Extensions\Lock\MySQLLock;
 use App\Extensions\Lock\RedisLock;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,45 +15,10 @@ class Test extends Model
     public $timestamps = false;
     public $guarded = [];
 
-    public function ReleaseLock()
-    {
-        $key = "prefix--key";
-        \LRedis::DEL($key);
-    }
-
-    public function GetLock()
-    {
-        $key = "prefix--key--lock";
-        $r = \LRedis::SET($key,"1","NX","EX",3);
-        if($r)
-            return true;
-        return false;
-    }
-
-    public function WithLock0(callable $func)
-    {
-        $r = true;
-        try {
-            while(!$this->GetLock()) sleep(0.02);
-            //$this->GetLock();
-            $func();
-        }
-        catch(\Exception $ex)
-        {
-            $r = false;
-            \Log::error($ex->getMessage());
-        }
-        finally {
-            $this->ReleaseLock();
-        }
-        return $r;
-    }
-
     public function WithLock(callable $func)
     {
-        return (new Locker(new FileLock()))->WithLock("prefix--key--lock",$func);
+        return resolve(\App\Extensions\Lock\Locker::class)->WithLock("prefix--key--lock",$func);
     }
-
 
     public function cacheLastID()
     {

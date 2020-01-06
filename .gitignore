@@ -16,3 +16,4 @@ _ide_helper.php
 public
 storage/debug
 storage/sqlLog
+storage/lock

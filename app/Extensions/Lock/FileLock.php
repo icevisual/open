@@ -22,6 +22,7 @@ class FileLock implements ILock
     public function GetLock($key, $block = true, $time = 3): bool
     {
         $this->fp = fopen(storage_path('lock/'.md5($key)), "w+");
+        // block or not block
         if ($block)
             return flock($this->fp, LOCK_EX);
         else
@@ -31,6 +32,7 @@ class FileLock implements ILock
     public function ReleaseLock($key)
     {
         flock($this->fp, LOCK_UN);
+        fclose($this->fp);
         // TODO: Implement ReleaseLock() method.
     }
 }
