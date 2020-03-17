@@ -38,6 +38,10 @@ class MakeTestTableCmd extends Command
      */
     public function handle()
     {
+        // php artisan test:db 100 100
+
+
+
 //
        // edump(date("Y-m-d H:m:s"));
 //        $a = time() - strtotime('2014-09-18');
@@ -73,6 +77,7 @@ class MakeTestTableCmd extends Command
         $c = $this->argument('c');
 
         $r = `ab -n $n -c $c http://smell.open.com/api/t1?name=1`;
+        //$r = `ab -n $n -c $c http://192.168.137.130:8899/ `;
         $arr = explode("\n",$r);
         $arr = array_slice($arr,14);
         $this->info("Summary");
@@ -83,5 +88,6 @@ class MakeTestTableCmd extends Command
         $table_data = \DB::table("test_cur")->select (\DB::raw("min(id),max(id),count(*)"))->get();
         dump($table_data->toArray());
         return;
+        $this->ask("");
     }
 }

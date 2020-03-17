@@ -29,6 +29,7 @@ use Illuminate\Http\Request;
 //     'uses' => 'Open\OpenController@verifyLogin'
 // ]);
 Route::match(['get', 'post'], '/t1', 'Test\TestController@create');
+Route::match(['get', 'post'], '/t2', 'Test\TestController@select');
 
 
 Route::group(['prefix' => 'mqtt',], function () {

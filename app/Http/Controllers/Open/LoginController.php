@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Open;
 
+use App\Jobs\SendEmailJob;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use App\Http\Controllers\Controller;
@@ -166,7 +167,7 @@ class LoginController extends Controller
                 $this->clearLoginAttempts($request);
                 
                 \Event::fire(new \App\Events\LoginSuccEvent(\Auth::getUser()->toArray()));
-                
+                $this->dispatch(new SendEmailJob());
                 if ($to) {
                     return $this->__json([
                         'to' => $to

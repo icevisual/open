@@ -9,17 +9,19 @@
         "ext-curl": "*",
         "ext-gd": "*",
         "ext-json": "*",
+        "ext-mysqli": "*",
         "ext-simplexml": "*",
         "binsoul/net-mqtt": "^0.7.0",
         "chumper/zipper": "^1.0",
         "fideloper/proxy": "~3.3",
+        "guzzlehttp/guzzle": "^6.5",
         "laravel/framework": "5.5.*",
         "laravel/passport": "~4.0",
         "laravel/tinker": "~1.0",
         "paragonie/random_compat": "2.0.18",
         "predis/predis": "^1.1",
         "sskaje/mqtt": "dev-v2.0-dev",
-      "ext-mysqli": "*"
+        "swoole/ide-helper": "~4.4.7"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.6",

@@ -32,4 +32,11 @@ class TestController extends Controller
             return $this->__json(400);
         return $this->__json();
     }
+
+
+    public function select()
+    {
+        return $this->__json();
+    }
+
 }

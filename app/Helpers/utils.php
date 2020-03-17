@@ -9,7 +9,7 @@ if (!function_exists("echoRunTime")) {
         $func();
         list($end_ms, $end) = explode(" ", microtime());
         $m_end = memory_get_usage();
-        echo (intval($end) + floatval($end_ms)) - (intval($start) + floatval($start_ms)), " ", $m_end - $m_start, PHP_EOL;
+        echo (intval($end) + floatval($end_ms)) - (intval($start) + floatval($start_ms)), " ", $m_end - $m_start . " bytes ", PHP_EOL;
     }
 }
 
